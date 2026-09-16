@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f172a">
+    <title>Мой Дневник</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding-bottom: 75px; background: #f8fafc; color: #1e293b; }
+        
+        .header { background: #0f172a; color: #fff; padding: 15px 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 20px; font-weight: 600; }
+        
+        .tab-content { display: none; padding: 16px; animation: fadeIn 0.2s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .card { background: #ffffff; padding: 16px; border-radius: 14px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; }
+        
+        label { font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 4px; display: block; }
+        input, textarea, select, button { width: 100%; padding: 12px; margin-top: 4px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 15px; outline: none; background: #fff; }
+        input:focus, textarea:focus { border-color: #3b82f6; }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 5px; }
+        .btn-group button { margin-bottom: 0; }
+        
+        button { font-weight: 600; border: none; cursor: pointer; transition: opacity 0.2s; }
+        button:active { opacity: 0.8; }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-green { background: #16a34a; color: white; }
+        .btn-red { background: #dc2626; color: white; }
+        .btn-secondary { background: #64748b; color: white; }
+        
+        /* Списки записей */
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .list-item:last-child { border-bottom: none; }
+        .item-info { flex-grow: 1; padding-right: 10px; }
+        .item-title { font-weight: 600; font-size: 15px; color: #0f172a; }
+        .item-sub { font-size: 13px; color: #64748b; margin-top: 2px; }
+        .del-btn { background: #fee2e2; color: #ef4444; width: auto; padding: 6px 12px; margin: 0; border-radius: 6px; font-size: 12px; }
+        
+        .done-task .item-title { text-decoration: line-through; color: #94a3b8; }
+        
+        /* Сумма финансов */
+        .income-text { color: #16a34a; font-weight: 700; }
+        .expense-text { color: #dc2626; font-weight: 700; }
+        
+        /* Навигация */
+        .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; display: flex; border-top: 1px solid #e2e8f0; box-shadow: 0 -2px 10px rgba(0,0,0,0.03); }
+        .nav button { flex: 1; margin: 0; padding: 12px 0; border-radius: 0; border: none; background: transparent; color: #64748b; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav button.active { color: #2563eb; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Мой Дневник</h1>
+    </div>
+
+    <!-- Вкладка: Дела -->
+    <div id="tasks" class="tab-content active">
+        <div class="card">
+            <label>Новая задача или заметка</label>
+            <textarea id="taskText" rows="3" placeholder="Записать мысли, планируемые дела..."></textarea>
+            <button class="btn-primary" onclick="addTask()">Сохранить</button>
+        </div>
+        <div class="card">
+            <label>Список дел</label>
+            <div id="tasksList"></div>
+        </div>
+    </div>
+
+    <!-- Вкладка: Тренировки -->
+    <div id="workouts" class="tab-content">
+        <div class="card">
+            <label>Упражнение</label>
+            <input type="text" id="workEx" placeholder="Например: Жим лежа / Подтягивания">
+            <div style="display: flex; gap: 10px;">
+                <div style="flex:1;">
+                    <label>Вес (кг)</label>
+                    <input type="number" id="workWeight" placeholder="80">
+                </div>
+                <div style="flex:1;">
+                    <label>Подходы x Повторы</label>
+                    <input type="text" id="workSets" placeholder="4х10">
+                </div>
+            </div>
+            <button class="btn-primary" onclick="addWorkout()">Записать подход</button>
+        </div>
+        <div class="card">
+            <label>История тренировок</label>
+            <div id="workoutsList"></div>
+        </div>
+    </div>
+
+    <!-- Вкладка: Финансы -->
+    <div id="finance" class="tab-content">
+        <div class="card" style="text-align: center; background: #0f172a; color: white;">
+            <span style="font-size: 13px; opacity: 0.8;">Текущий баланс</span>
+            <h1 style="margin: 5px 0 0 0; font-size: 32px;"><span id="balanceVal">0</span> ₼</h1>
+        </div>
+        <div class="card">
+            <label>Сумма</label>
+            <input type="number" id="finAmount" placeholder="0">
+            <label>Категория / Описание</label>
+            <input type="text" id="finTitle" placeholder="Продукты, зарплата, заправка...">
+            <div class="btn-group">
+                <button class="btn-green" onclick="addFinance('income')">+ Доход</button>
+                <button class="btn-red" onclick="addFinance('expense')">- Расход</button>
+            </div>
+        </div>
+        <div class="card">
+            <label>История операций</label>
+            <div id="financeList"></div>
+        </div>
+    </div>
+
+    <!-- Вкладка: Настройки / Резервная копия -->
+    <div id="settings" class="tab-content">
+        <div class="card">
+            <label>Резервное копирование</label>
+            <p style="font-size: 13px; color: #64748b; margin-top: 0;">Скачай файл с данными, чтобы не потерять историю при смене телефона или очистке браузера.</p>
+            <button class="btn-primary" onclick="exportData()">📥 Скачать бэкап (JSON)</button>
+            <label style="margin-top: 15px;">Восстановить данные</label>
+            <input type="file" id="importFile" accept=".json" onchange="importData(event)">
+        </div>
+        <div class="card">
+            <button class="btn-red" onclick="clearAllData()">⚠️ Сбросить все данные</button>
+        </div>
+    </div>
+
+    <!-- Нижнее меню -->
+    <div class="nav">
+        <button onclick="openTab('tasks')" class="active" id="btn-tasks">📝<span>Дела</span></button>
+        <button onclick="openTab('workouts')" id="btn-workouts">🏋️<span>Тренировки</span></button>
+        <button onclick="openTab('finance')" id="btn-finance">💰<span>Финансы</span></button>
+        <button onclick="openTab('settings')" id="btn-settings">⚙️<span>Бэкап</span></button>
+    </div>
+
+    <script>
+        // Инициализация данных
+        let tasks = JSON.parse(localStorage.getItem('my_tasks') || '[]');
+        let workouts = JSON.parse(localStorage.getItem('my_workouts') || '[]');
+        let finance = JSON.parse(localStorage.getItem('my_finance') || '[]');
+
+        function openTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            document.getElementById('btn-' + tabName).classList.add('active');
+        }
+
+        function getTodayDate() {
+            const d = new Date();
+            return d.getDate().toString().padStart(2, '0') + '.' + (d.getMonth() + 1).toString().padStart(2, '0') + '.' + d.getFullYear();
+        }
+
+        // --- ДЕЛА ---
+        function addTask() {
+            const text = document.getElementById('taskText').value.trim();
+            if (!text) return;
+            tasks.unshift({ id: Date.now(), text: text, done: false, date: getTodayDate() });
+            saveAndRender();
+            document.getElementById('taskText').value = '';
+        }
+
+        function toggleTask(id) {
+            tasks = tasks.map(t => t.id === id ? { ...t, done: !t.done } : t);
+            saveAndRender();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveAndRender();
+        }
+
+        function renderTasks() {
+            const container = document.getElementById('tasksList');
+            if (tasks.length === 0) { container.innerHTML = '<p style="color:#94a3b8; font-size:13px;">Записей пока нет</p>'; return; }
+            container.innerHTML = tasks.map(t => `
+                <div class="list-item ${t.done ? 'done-task' : ''}">
+                    <div class="item-info" onclick="toggleTask(${t.id})" style="cursor:pointer;">
+                        <div class="item-title">${t.done ? '✓ ' : ''}${escapeHtml(t.text)}</div>
+                        <div class="item-sub">${t.date}</div>
+                    </div>
+                    <button class="del-btn" onclick="deleteTask(${t.id})">Удалить</button>
+                </div>
+            `).join('');
+        }
+
+        // --- ТРЕНИРОВКИ ---
+        function addWorkout() {
+            const ex = document.getElementById('workEx').value.trim();
+            const weight = document.getElementById('workWeight').value.trim();
+            const sets = document.getElementById('workSets').value.trim();
+            if (!ex) return;
+
+            workouts.unshift({ id: Date.now(), ex, weight: weight || '0', sets: sets || '-', date: getTodayDate() });
+            saveAndRender();
+            document.getElementById('workEx').value = '';
+            document.getElementById('workWeight').value = '';
+            document.getElementById('workSets').value = '';
+        }
+
+        function deleteWorkout(id) {
+            workouts = workouts.filter(w => w.id !== id);
+            saveAndRender();
+        }
+
+        function renderWorkouts() {
+            const container = document.getElementById('workoutsList');
+            if (workouts.length === 0) { container.innerHTML = '<p style="color:#94a3b8; font-size:13px;">Нет записей о тренировках</p>'; return; }
+            container.innerHTML = workouts.map(w => `
+                <div class="list-item">
+                    <div class="item-info">
+                        <div class="item-title">${escapeHtml(w.ex)}</div>
+                        <div class="item-sub">Вес: <b>${w.weight} кг</b> | Подходы: <b>${escapeHtml(w.sets)}</b> (${w.date})</div>
+                    </div>
+                    <button class="del-btn" onclick="deleteWorkout(${w.id})">Удалить</button>
+                </div>
+            `).join('');
+        }
+
+        // --- ФИНАНСЫ ---
+        function addFinance(type) {
+            const amount = parseFloat(document.getElementById('finAmount').value);
+            const title = document.getElementById('finTitle').value.trim();
+            if (!amount || amount <= 0) return;
+
+            finance.unshift({ id: Date.now(), type, amount, title: title || (type === 'income' ? 'Доход' : 'Расход'), date: getTodayDate() });
+            saveAndRender();
+            document.getElementById('finAmount').value = '';
+            document.getElementById('finTitle').value = '';
+        }
+
+        function deleteFinance(id) {
+            finance = finance.filter(f => f.id !== id);
+            saveAndRender();
+        }
+
+        function renderFinance() {
+            const container = document.getElementById('financeList');
+            let balance = 0;
+            finance.forEach(f => {
+                if (f.type === 'income') balance += f.amount;
+                else balance -= f.amount;
+            });
+            document.getElementById('balanceVal').innerText = balance.toLocaleString();
+
+            if (finance.length === 0) { container.innerHTML = '<p style="color:#94a3b8; font-size:13px;">История финансов пуста</p>'; return; }
+
+            container.innerHTML = finance.map(f => `
+                <div class="list-item">
+                    <div class="item-info">
+                        <div class="item-title">${escapeHtml(f.title)}</div>
+                        <div class="item-sub">${f.date}</div>
+                    </div>
+                    <div style="margin-right:10px;" class="${f.type === 'income' ? 'income-text' : 'expense-text'}">
+                        ${f.type === 'income' ? '+' : '-'}${f.amount} ₼
+                    </div>
+                    <button class="del-btn" onclick="deleteFinance(${f.id})">✕</button>
+                </div>
+            `).join('');
+        }
+
+        // --- БЭКАП И ВСПОМОГАТЕЛЬНЫЕ ---
+        function saveAndRender() {
+            localStorage.setItem('my_tasks', JSON.stringify(tasks));
+            localStorage.setItem('my_workouts', JSON.stringify(workouts));
+            localStorage.setItem('my_finance', JSON.stringify(finance));
+            renderTasks();
+            renderWorkouts();
+            renderFinance();
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ tasks, workouts, finance }));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `diary_backup_${getTodayDate()}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(e) {
+            const fileReader = new FileReader();
+            fileReader.onload = function (event) {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    if (data.tasks) tasks = data.tasks;
+                    if (data.workouts) workouts = data.workouts;
+                    if (data.finance) finance = data.finance;
+                    saveAndRender();
+                    alert('Данные успешно восстановлены!');
+                } catch (err) { alert('Ошибка при чтении файла бэкапа'); }
+            };
+            fileReader.readAsText(e.target.files[0]);
+        }
+
+        function clearAllData() {
+            if (confirm('Удалить абсолютно все записи из приложения?')) {
+                localStorage.clear();
+                tasks = []; workouts = []; finance = [];
+                saveAndRender();
+            }
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        // Первичный рендер при старте
+        saveAndRender();
+
+        // PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+        }
+    </script>
+</body>
+</html>
