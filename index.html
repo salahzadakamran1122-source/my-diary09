@@ -3,48 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#111618">
+    <meta name="theme-color" content="#121619">
     <title>Мой Дневник</title>
     <link rel="manifest" href="manifest.json">
     <style>
         :root {
-            --bg-color: #111618;
-            --card-bg: #182024;
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-primary: #e8ece9;
-            --text-secondary: #8c9b90;
-            --accent: #3b7a57;
-            --accent-green: #2e7d52;
-            --accent-red: #c85a54;
-            --input-bg: #131a1d;
-            --header-bg: rgba(17, 22, 24, 0.92);
+            --bg-color: #0f1315;
+            --card-bg: #171d20;
+            --card-border: rgba(255, 255, 255, 0.07);
+            --text-primary: #ecf0ed;
+            --text-secondary: #829288;
+            --accent: #347852;
+            --accent-hover: #3d8c60;
+            --accent-green: #297a4d;
+            --accent-red: #bd4c46;
+            --input-bg: #111618;
+            --header-bg: rgba(15, 19, 21, 0.88);
             --badge-bg: rgba(255, 255, 255, 0.06);
 
-            /* Природная палитра стикеров (Темная тема) */
-            --st-sage: #1a2e24;
-            --st-sand: #2e261a;
-            --st-clay: #2e1d1b;
-            --st-ocean: #182733;
+            /* Природная палитра стикеров (Темная) */
+            --st-sage: #182c23;
+            --st-sand: #2a2319;
+            --st-clay: #2b1b19;
+            --st-ocean: #162430;
         }
 
         body.light-theme {
-            --bg-color: #f3f2ee;
+            --bg-color: #f4f3ef;
             --card-bg: #ffffff;
-            --card-border: #e0ddd5;
-            --text-primary: #1a221e;
-            --text-secondary: #627068;
-            --accent: #2d5842;
-            --accent-green: #236841;
-            --accent-red: #b3453f;
-            --input-bg: #f8f7f3;
-            --header-bg: rgba(243, 242, 238, 0.92);
-            --badge-bg: #e8e6df;
+            --card-border: #e3e0d8;
+            --text-primary: #18201c;
+            --text-secondary: #65746b;
+            --accent: #27563f;
+            --accent-hover: #1e4431;
+            --accent-green: #216941;
+            --accent-red: #af3e38;
+            --input-bg: #f9f8f4;
+            --header-bg: rgba(244, 243, 239, 0.88);
+            --badge-bg: #eae7e0;
 
-            /* Природная палитра стикеров (Светлая тема) */
-            --st-sage: #e1eee4;
-            --st-sand: #f6efe0;
-            --st-clay: #f6e6e3;
-            --st-ocean: #e0ebf1;
+            /* Природная палитра стикеров (Светлая) */
+            --st-sage: #e1eee5;
+            --st-sand: #f6efe2;
+            --st-clay: #f6e7e4;
+            --st-ocean: #e1ebf1;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -52,14 +54,22 @@
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif; 
             margin: 0; 
-            padding-top: 115px; 
+            padding-top: 110px; 
+            padding-bottom: 30px;
             background-color: var(--bg-color); 
             color: var(--text-primary);
             min-height: 100vh;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.25s, color 0.25s;
         }
 
-        /* Шапка и Навигация */
+        /* Центрирующий адаптивный контейнер */
+        .app-container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Фиксированная шапка */
         .top-container {
             position: fixed;
             top: 0; left: 0; width: 100%;
@@ -70,71 +80,96 @@
             border-bottom: 1px solid var(--card-border);
         }
 
-        .header { 
+        .header-inner {
+            max-width: 640px;
+            margin: 0 auto;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 16px;
+            padding: 10px 16px;
         }
 
-        .header h1 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+        .header-inner h1 { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
 
         .icon-btn {
             background: transparent; border: none; color: var(--text-primary);
             padding: 8px; border-radius: 10px; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
+            transition: background 0.15s;
         }
         .icon-btn:active { background: var(--card-border); }
-        .icon-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .icon-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-        .nav { display: flex; border-top: 1px solid var(--card-border); overflow-x: auto; }
+        /* Табы в виде сегментированного переключателя */
+        .nav-wrapper {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 0 12px 8px 12px;
+        }
+
+        .nav { 
+            display: flex; 
+            background: var(--input-bg);
+            padding: 4px;
+            border-radius: 14px;
+            border: 1px solid var(--card-border);
+        }
+
         .nav button { 
-            flex: 1; min-width: 65px; margin: 0; padding: 10px 0; border: none; 
+            flex: 1; padding: 7px 0; border: none; 
+            border-radius: 10px;
             background: transparent; color: var(--text-secondary); 
             font-size: 11px; font-weight: 600; display: flex; 
-            flex-direction: column; align-items: center; gap: 4px; cursor: pointer;
+            flex-direction: column; align-items: center; gap: 3px; cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .nav button.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
-        .nav svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .nav button.active { 
+            background: var(--card-bg); 
+            color: var(--text-primary); 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .nav button.active svg { stroke: var(--accent); }
+        .nav svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-        /* Контент Вкладок */
-        .tab-content { display: none; padding: 16px; animation: fadeIn 0.2s ease; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
+        /* Карточки */
         .card { 
-            background: var(--card-bg); padding: 16px; border-radius: 16px; 
-            margin-bottom: 14px; border: 1px solid var(--card-border);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            background: var(--card-bg); 
+            padding: 18px; 
+            border-radius: 20px; 
+            margin-bottom: 14px; 
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
         }
 
-        /* Приветственный Баннер на Главной */
+        /* Приветственный Баннер */
         .welcome-card {
-            background: linear-gradient(135deg, #1e3328 0%, #13221b 100%);
+            background: linear-gradient(135deg, #1d3629 0%, #12241b 100%);
             color: #e8ece9; border: 1px solid rgba(255,255,255,0.1);
-            padding: 20px; border-radius: 18px; margin-bottom: 16px;
+            padding: 20px; border-radius: 22px; margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
         body.light-theme .welcome-card {
-            background: linear-gradient(135deg, #2d5842 0%, #1e3c2d 100%);
+            background: linear-gradient(135deg, #27563f 0%, #193b2a 100%);
             color: #ffffff;
         }
 
-        .stats-grid { display: flex; gap: 10px; margin-top: 14px; }
+        .stats-grid { display: flex; gap: 8px; margin-top: 14px; }
         .stat-badge {
-            flex: 1; background: rgba(255,255,255,0.1); padding: 10px;
-            border-radius: 12px; text-align: center; font-size: 12px; backdrop-filter: blur(8px);
+            flex: 1; background: rgba(255,255,255,0.08); padding: 10px 8px;
+            border-radius: 12px; text-align: center; font-size: 11px; backdrop-filter: blur(6px);
         }
-        .stat-badge strong { display: block; font-size: 16px; margin-top: 2px; }
+        .stat-badge strong { display: block; font-size: 15px; margin-top: 2px; }
 
-        /* СТИКЕРЫ И ДОСКА */
+        /* Доска Стиреров */
         .stickers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 12px; margin-top: 12px;
+            gap: 12px; margin-top: 10px;
         }
 
         .sticker-card {
-            padding: 14px; border-radius: 14px; min-height: 130px;
+            padding: 14px; border-radius: 16px; min-height: 125px;
             display: flex; flex-direction: column; justify-content: space-between;
-            border: 1px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border: 1px solid var(--card-border); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             position: relative; word-break: break-word; transition: transform 0.15s;
         }
         .sticker-card:hover { transform: translateY(-2px); }
@@ -147,79 +182,85 @@
             font-size: 10px; font-weight: 700; text-transform: uppercase;
             letter-spacing: 0.5px; opacity: 0.7; margin-bottom: 6px;
         }
-        .sticker-text { font-size: 14px; font-weight: 500; line-height: 1.4; white-space: pre-wrap; }
+        .sticker-text { font-size: 13.5px; font-weight: 500; line-height: 1.4; white-space: pre-wrap; }
         .sticker-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 11px; opacity: 0.75; }
 
         .sticker-actions { display: flex; gap: 4px; }
         .mini-btn { background: rgba(0,0,0,0.15); border: none; padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; color: inherit; }
-        .mini-btn:hover { background: rgba(0,0,0,0.3); }
+        .mini-btn:hover { background: rgba(0,0,0,0.25); }
 
-        /* Формы и поля */
-        label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+        /* Поля ввода */
+        label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-secondary); margin-bottom: 6px; display: block; }
         
         input, textarea, select { 
-            width: 100%; padding: 12px; margin-top: 2px; margin-bottom: 12px; 
-            border-radius: 10px; border: 1px solid var(--card-border); 
-            font-size: 15px; outline: none; background: var(--input-bg); color: var(--text-primary);
+            width: 100%; padding: 11px 13px; margin-top: 2px; margin-bottom: 12px; 
+            border-radius: 12px; border: 1px solid var(--card-border); 
+            font-size: 14.5px; outline: none; background: var(--input-bg); color: var(--text-primary);
+            transition: border-color 0.2s;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--accent);
         }
 
-        .color-picker { display: flex; gap: 10px; margin: 8px 0 14px 0; }
-        .color-opt { width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
-        .color-opt.selected { border-color: var(--text-primary); transform: scale(1.1); }
+        .form-row { display: flex; gap: 10px; }
+        .form-row > div { flex: 1; }
+
+        .color-picker { display: flex; gap: 12px; margin: 8px 0 14px 0; }
+        .color-opt { width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.15s; }
+        .color-opt.selected { border-color: var(--text-primary); transform: scale(1.15); }
 
         .btn-group { display: flex; gap: 10px; }
 
         button.action-btn { 
-            width: 100%; padding: 12px; font-size: 15px; font-weight: 600; 
-            border: none; border-radius: 10px; cursor: pointer; transition: opacity 0.2s; 
+            width: 100%; padding: 12px; font-size: 14.5px; font-weight: 600; 
+            border: none; border-radius: 12px; cursor: pointer; transition: opacity 0.2s, transform 0.1s; 
         }
-        button.action-btn:active { opacity: 0.8; }
+        button.action-btn:active { opacity: 0.85; transform: scale(0.99); }
         
         .btn-primary { background: var(--accent); color: white; }
         .btn-green { background: var(--accent-green); color: white; }
         .btn-red { background: var(--accent-red); color: white; }
 
-        /* Вкладка Финансы & Калькулятор */
-        .sub-nav { display: flex; gap: 8px; margin-bottom: 14px; }
+        /* Подвкладки внутри Финансов */
+        .sub-nav { display: flex; background: var(--input-bg); padding: 3px; border-radius: 12px; margin-bottom: 14px; border: 1px solid var(--card-border); }
         .sub-nav button {
-            flex: 1; padding: 8px; border-radius: 10px; border: 1px solid var(--card-border);
-            background: var(--card-bg); color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer;
+            flex: 1; padding: 8px; border-radius: 9px; border: none;
+            background: transparent; color: var(--text-secondary); font-size: 12.5px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s;
         }
-        .sub-nav button.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .sub-nav button.active { background: var(--card-bg); color: var(--text-primary); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
 
-        .calc-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px;
-        }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
         .calc-btn {
-            padding: 14px; font-size: 18px; font-weight: 600; border-radius: 10px;
+            padding: 14px; font-size: 17px; font-weight: 600; border-radius: 12px;
             border: 1px solid var(--card-border); background: var(--input-bg); color: var(--text-primary);
-            cursor: pointer; text-align: center;
+            cursor: pointer; text-align: center; transition: background 0.1s;
         }
         .calc-btn:active { background: var(--card-border); }
         .calc-btn.op { background: var(--accent); color: white; }
 
-        /* Таблица / Список */
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--card-border); }
+        /* Список операций */
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--card-border); }
         .list-item:last-child { border-bottom: none; }
         .item-info { flex-grow: 1; padding-right: 10px; }
-        .item-title { font-weight: 600; font-size: 15px; color: var(--text-primary); }
-        .item-sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; display: flex; gap: 6px; }
+        .item-title { font-weight: 600; font-size: 14.5px; color: var(--text-primary); }
+        .item-sub { font-size: 11.5px; color: var(--text-secondary); margin-top: 4px; display: flex; gap: 6px; }
         
-        .badge { background: var(--badge-bg); padding: 2px 8px; border-radius: 6px; font-size: 11px; }
-        .del-btn { background: rgba(200, 90, 84, 0.15); color: var(--accent-red); width: auto; padding: 6px 10px; border-radius: 6px; font-size: 12px; border: none; cursor: pointer; }
+        .badge { background: var(--badge-bg); padding: 2px 7px; border-radius: 6px; font-size: 10.5px; }
+        .del-btn { background: rgba(189, 76, 70, 0.12); color: var(--accent-red); padding: 5px 9px; border-radius: 8px; font-size: 11.5px; border: none; cursor: pointer; }
 
-        /* Шторка поиска */
-        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; opacity: 0; visibility: hidden; transition: all 0.3s; }
+        /* Шторка Поиска */
+        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; opacity: 0; visibility: hidden; transition: all 0.25s; backdrop-filter: blur(4px); }
         .drawer-overlay.active { opacity: 1; visibility: visible; }
-        .drawer { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card-bg); z-index: 201; padding: 20px 16px; box-shadow: 5px 0 25px rgba(0,0,0,0.3); transition: transform 0.3s; border-right: 1px solid var(--card-border); }
-        .drawer.active { transform: translateX(280px); }
+        .drawer { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: var(--card-bg); z-index: 201; padding: 20px 16px; box-shadow: 5px 0 25px rgba(0,0,0,0.3); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); border-right: 1px solid var(--card-border); }
+        .drawer.active { transform: translateX(300px); }
     </style>
 </head>
 <body>
 
-    <!-- Шапка и Навигация -->
+    <!-- Фиксированная Навигация -->
     <div class="top-container">
-        <div class="header">
+        <div class="header-inner">
             <button class="icon-btn" onclick="toggleDrawer()">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
             </button>
@@ -229,27 +270,29 @@
             </button>
         </div>
 
-        <div class="nav">
-            <button onclick="openTab('home')" class="active" id="btn-home">
-                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                <span>Главная</span>
-            </button>
-            <button onclick="openTab('tasks')" id="btn-tasks">
-                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                <span>Заметки</span>
-            </button>
-            <button onclick="openTab('workouts')" id="btn-workouts">
-                <svg viewBox="0 0 24 24"><path d="M18 8h1a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-1"/><path d="M6 8H5a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h1"/><path d="M8 6h8v12H8z"/><path d="M12 6v12"/></svg>
-                <span>Зал</span>
-            </button>
-            <button onclick="openTab('finance')" id="btn-finance">
-                <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
-                <span>Финансы</span>
-            </button>
-            <button onclick="openTab('settings')" id="btn-settings">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                <span>Бэкап</span>
-            </button>
+        <div class="nav-wrapper">
+            <div class="nav">
+                <button onclick="openTab('home')" class="active" id="btn-home">
+                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span>Главная</span>
+                </button>
+                <button onclick="openTab('tasks')" id="btn-tasks">
+                    <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    <span>Заметки</span>
+                </button>
+                <button onclick="openTab('workouts')" id="btn-workouts">
+                    <svg viewBox="0 0 24 24"><path d="M18 8h1a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-1"/><path d="M6 8H5a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h1"/><path d="M8 6h8v12H8z"/><path d="M12 6v12"/></svg>
+                    <span>Зал</span>
+                </button>
+                <button onclick="openTab('finance')" id="btn-finance">
+                    <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+                    <span>Финансы</span>
+                </button>
+                <button onclick="openTab('settings')" id="btn-settings">
+                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Бэкап</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -264,158 +307,164 @@
         <div id="searchResults" style="max-height: 70vh; overflow-y: auto;"></div>
     </div>
 
-    <!-- Вкладка 1: ГЛАВНАЯ (Приветствие и Доска) -->
-    <div id="home" class="tab-content active">
-        <div class="welcome-card">
-            <h2 style="margin:0; font-size: 20px;">👋 Рад видеть тебя!</h2>
-            <p style="margin: 6px 0 0 0; font-size: 13px; opacity: 0.85;" id="currentDateStr">Загрузка даты...</p>
-            
-            <div class="stats-grid">
-                <div class="stat-badge">Заметки<strong id="statNotesCount">0</strong></div>
-                <div class="stat-badge">Баланс<strong id="statBalance">0 ₼</strong></div>
-                <div class="stat-badge">Тренировки<strong id="statWorkoutsCount">0</strong></div>
-            </div>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <label style="margin:0;">📌 Доска записей и результатов</label>
-        </div>
-
-        <div id="stickersBoard" class="stickers-grid"></div>
-    </div>
-
-    <!-- Вкладка 2: ЗАМЕТКИ (Создание и Редактирование) -->
-    <div id="tasks" class="tab-content">
-        <div class="card">
-            <label id="noteFormTitle">Создать новую запись</label>
-            <textarea id="taskText" rows="4" placeholder="Напиши что угодно: мысли, рецепт, важную задачу..."></textarea>
-            
-            <label>Тип записи</label>
-            <select id="noteCategory">
-                <option value="Заметка">📝 Заметка</option>
-                <option value="Рецепт">🥗 Рецепт</option>
-                <option value="Идея">💡 Идея</option>
-                <option value="Важное">⚠️ Важное</option>
-            </select>
-
-            <label>Цвет стикера на Главной</label>
-            <div class="color-picker">
-                <div class="color-opt selected" style="background:#2e7d52;" onclick="selectStickerColor('sage', this)"></div>
-                <div class="color-opt" style="background:#a3855c;" onclick="selectStickerColor('sand', this)"></div>
-                <div class="color-opt" style="background:#c85a54;" onclick="selectStickerColor('clay', this)"></div>
-                <div class="color-opt" style="background:#3b6d8c;" onclick="selectStickerColor('ocean', this)"></div>
-            </div>
-
-            <button class="action-btn btn-primary" id="saveNoteBtn" onclick="saveNote()">Опубликовать на Главную</button>
-            <button class="action-btn" id="cancelEditBtn" onclick="resetNoteForm()" style="display:none; margin-top:8px; background:var(--badge-bg); color:var(--text-primary);">Отмена</button>
-        </div>
-
-        <div class="card">
-            <label>Все твои записи</label>
-            <div id="tasksList"></div>
-        </div>
-    </div>
-
-    <!-- Вкладка 3: ТРЕНИРОВКИ -->
-    <div id="workouts" class="tab-content">
-        <div class="card">
-            <label>Добавить подход</label>
-            <input type="text" id="workEx" placeholder="Упражнение (напр. Жим лежа)">
-            <div style="display: flex; gap: 10px;">
-                <div style="flex:1;">
-                    <label>Вес (кг)</label>
-                    <input type="number" id="workWeight" placeholder="80">
-                </div>
-                <div style="flex:1;">
-                    <label>Подходы</label>
-                    <input type="text" id="workSets" placeholder="4х10">
-                </div>
-            </div>
-            <button class="action-btn btn-primary" onclick="addWorkout()">Записать тренировку</button>
-        </div>
-        <div class="card">
-            <label>История в зале</label>
-            <div id="workoutsList"></div>
-        </div>
-    </div>
-
-    <!-- Вкладка 4: ФИНАНСЫ (С калькулятором) -->
-    <div id="finance" class="tab-content">
-        <div class="sub-nav">
-            <button class="active" id="subBtnOps" onclick="switchFinSubTab('ops')">💳 Операции</button>
-            <button id="subBtnCalc" onclick="switchFinSubTab('calc')">🧮 Калькулятор</button>
-        </div>
-
-        <!-- Подвкладка: Операции -->
-        <div id="finSubOps">
-            <div class="card" style="background: linear-gradient(135deg, #2d5842 0%, #1e3c2d 100%); color:#fff; border:none;">
-                <span style="font-size: 11px; text-transform: uppercase; opacity: 0.85;">Текущий Баланс</span>
-                <h1 style="margin: 6px 0 0 0; font-size: 32px;"><span id="balanceVal">0</span> ₼</h1>
-            </div>
-            <div class="card">
-                <label>Сумма (₼)</label>
-                <input type="number" id="finAmount" placeholder="0">
-                <label>Категория / Заметка</label>
-                <input type="text" id="finTitle" placeholder="Продукты, Еда, Зарплата...">
-                <div class="btn-group">
-                    <button class="action-btn btn-green" onclick="addFinance('income')">+ Доход</button>
-                    <button class="action-btn btn-red" onclick="addFinance('expense')">- Расход</button>
-                </div>
-            </div>
-            <div class="card">
-                <label>История операций</label>
-                <div id="financeList"></div>
-            </div>
-        </div>
-
-        <!-- Подвкладка: Калькулятор -->
-        <div id="finSubCalc" style="display:none;">
-            <div class="card">
-                <label>Быстрый расчет</label>
-                <input type="text" id="calcDisplay" readonly value="0" style="font-size:24px; text-align:right; font-weight:700;">
+    <!-- Основной Компактный Контейнер -->
+    <div class="app-container">
+        
+        <!-- Вкладка 1: ГЛАВНАЯ -->
+        <div id="home" class="tab-content" style="display:block;">
+            <div class="welcome-card">
+                <h2 style="margin:0; font-size: 19px;">👋 Рад видеть тебя!</h2>
+                <p style="margin: 5px 0 0 0; font-size: 12.5px; opacity: 0.85;" id="currentDateStr">Загрузка даты...</p>
                 
-                <div class="calc-grid">
-                    <button class="calc-btn" onclick="calcInput('C')">C</button>
-                    <button class="calc-btn" onclick="calcInput('⌫')">⌫</button>
-                    <button class="calc-btn op" onclick="calcInput('/')">÷</button>
-                    <button class="calc-btn op" onclick="calcInput('*')">×</button>
+                <div class="stats-grid">
+                    <div class="stat-badge">Заметки<strong id="statNotesCount">0</strong></div>
+                    <div class="stat-badge">Баланс<strong id="statBalance">0 ₼</strong></div>
+                    <div class="stat-badge">Тренировки<strong id="statWorkoutsCount">0</strong></div>
+                </div>
+            </div>
 
-                    <button class="calc-btn" onclick="calcInput('7')">7</button>
-                    <button class="calc-btn" onclick="calcInput('8')">8</button>
-                    <button class="calc-btn" onclick="calcInput('9')">9</button>
-                    <button class="calc-btn op" onclick="calcInput('-')">-</button>
+            <label style="margin-bottom:8px;">📌 Доска записей и результатов</label>
+            <div id="stickersBoard" class="stickers-grid"></div>
+        </div>
 
-                    <button class="calc-btn" onclick="calcInput('4')">4</button>
-                    <button class="calc-btn" onclick="calcInput('5')">5</button>
-                    <button class="calc-btn" onclick="calcInput('6')">6</button>
-                    <button class="calc-btn op" onclick="calcInput('+')">+</button>
+        <!-- Вкладка 2: ЗАМЕТКИ -->
+        <div id="tasks" class="tab-content" style="display:none;">
+            <div class="card">
+                <label id="noteFormTitle">Создать новую запись</label>
+                <textarea id="taskText" rows="3" placeholder="Напиши что угодно: мысли, рецепт, задачу..."></textarea>
+                
+                <label>Тип записи</label>
+                <select id="noteCategory">
+                    <option value="Заметка">📝 Заметка</option>
+                    <option value="Рецепт">🥗 Рецепт</option>
+                    <option value="Идея">💡 Идея</option>
+                    <option value="Важное">⚠️ Важное</option>
+                </select>
 
-                    <button class="calc-btn" onclick="calcInput('1')">1</button>
-                    <button class="calc-btn" onclick="calcInput('2')">2</button>
-                    <button class="calc-btn" onclick="calcInput('3')">3</button>
-                    <button class="calc-btn op" onclick="calcEquals()" style="grid-row: span 2; display:flex; align-items:center; justify-content:center;">=</button>
-
-                    <button class="calc-btn" onclick="calcInput('0')" style="grid-column: span 2;">0</button>
-                    <button class="calc-btn" onclick="calcInput('.')">.</button>
+                <label>Цвет стикера на Главной</label>
+                <div class="color-picker">
+                    <div class="color-opt selected" style="background:#297a4d;" onclick="selectStickerColor('sage', this)"></div>
+                    <div class="color-opt" style="background:#a3855c;" onclick="selectStickerColor('sand', this)"></div>
+                    <div class="color-opt" style="background:#bd4c46;" onclick="selectStickerColor('clay', this)"></div>
+                    <div class="color-opt" style="background:#326587;" onclick="selectStickerColor('ocean', this)"></div>
                 </div>
 
-                <button class="action-btn btn-primary" style="margin-top:14px;" onclick="copyCalcToFinance()">Вставить в сумму расходов/доходов</button>
+                <button class="action-btn btn-primary" id="saveNoteBtn" onclick="saveNote()">Опубликовать на Главную</button>
+                <button class="action-btn" id="cancelEditBtn" onclick="resetNoteForm()" style="display:none; margin-top:8px; background:var(--badge-bg); color:var(--text-primary);">Отмена</button>
+            </div>
+
+            <div class="card">
+                <label>Все твои записи</label>
+                <div id="tasksList"></div>
             </div>
         </div>
-    </div>
 
-    <!-- Вкладка 5: БЭКАП -->
-    <div id="settings" class="tab-content">
-        <div class="card">
-            <label>Резервное копирование</label>
-            <p style="font-size: 13px; color: var(--text-secondary); margin-top: 0;">Скачай файл для переноса между телефоном и ПК.</p>
-            <button class="action-btn btn-primary" onclick="exportData()">📥 Скачать бэкап (JSON)</button>
-            <label style="margin-top: 15px;">Восстановить из файла</label>
-            <input type="file" id="importFile" accept=".json" onchange="importData(event)">
+        <!-- Вкладка 3: ТРЕНИРОВКИ -->
+        <div id="workouts" class="tab-content" style="display:none;">
+            <div class="card">
+                <label>Добавить подход</label>
+                <input type="text" id="workEx" placeholder="Упражнение (напр. Жим лежа)">
+                <div class="form-row">
+                    <div>
+                        <label>Вес (кг)</label>
+                        <input type="number" id="workWeight" placeholder="80">
+                    </div>
+                    <div>
+                        <label>Подходы</label>
+                        <input type="text" id="workSets" placeholder="4х10">
+                    </div>
+                </div>
+                <button class="action-btn btn-primary" onclick="addWorkout()">Записать тренировку</button>
+            </div>
+            <div class="card">
+                <label>История в зале</label>
+                <div id="workoutsList"></div>
+            </div>
         </div>
-        <div class="card">
-            <button class="action-btn btn-red" onclick="clearAllData()">⚠️ Сбросить все данные</button>
+
+        <!-- Вкладка 4: ФИНАНСЫ -->
+        <div id="finance" class="tab-content" style="display:none;">
+            <div class="sub-nav">
+                <button class="active" id="subBtnOps" onclick="switchFinSubTab('ops')">💳 Операции</button>
+                <button id="subBtnCalc" onclick="switchFinSubTab('calc')">🧮 Калькулятор</button>
+            </div>
+
+            <div id="finSubOps">
+                <div class="card" style="background: linear-gradient(135deg, #27563f 0%, #173727 100%); color:#fff; border:none; box-shadow: 0 6px 20px rgba(0,0,0,0.15);">
+                    <span style="font-size: 11px; text-transform: uppercase; opacity: 0.85;">Текущий Баланс</span>
+                    <h1 style="margin: 4px 0 0 0; font-size: 30px;"><span id="balanceVal">0</span> ₼</h1>
+                </div>
+                <div class="card">
+                    <div class="form-row">
+                        <div>
+                            <label>Сумма (₼)</label>
+                            <input type="number" id="finAmount" placeholder="0">
+                        </div>
+                        <div>
+                            <label>Категория</label>
+                            <input type="text" id="finTitle" placeholder="Еда, Зарплата...">
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-green" onclick="addFinance('income')">+ Доход</button>
+                        <button class="action-btn btn-red" onclick="addFinance('expense')">- Расход</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <label>История операций</label>
+                    <div id="financeList"></div>
+                </div>
+            </div>
+
+            <div id="finSubCalc" style="display:none;">
+                <div class="card">
+                    <label>Быстрый расчет</label>
+                    <input type="text" id="calcDisplay" readonly value="0" style="font-size:22px; text-align:right; font-weight:700;">
+                    
+                    <div class="calc-grid">
+                        <button class="calc-btn" onclick="calcInput('C')">C</button>
+                        <button class="calc-btn" onclick="calcInput('⌫')">⌫</button>
+                        <button class="calc-btn op" onclick="calcInput('/')">÷</button>
+                        <button class="calc-btn op" onclick="calcInput('*')">×</button>
+
+                        <button class="calc-btn" onclick="calcInput('7')">7</button>
+                        <button class="calc-btn" onclick="calcInput('8')">8</button>
+                        <button class="calc-btn" onclick="calcInput('9')">9</button>
+                        <button class="calc-btn op" onclick="calcInput('-')">-</button>
+
+                        <button class="calc-btn" onclick="calcInput('4')">4</button>
+                        <button class="calc-btn" onclick="calcInput('5')">5</button>
+                        <button class="calc-btn" onclick="calcInput('6')">6</button>
+                        <button class="calc-btn op" onclick="calcInput('+')">+</button>
+
+                        <button class="calc-btn" onclick="calcInput('1')">1</button>
+                        <button class="calc-btn" onclick="calcInput('2')">2</button>
+                        <button class="calc-btn" onclick="calcInput('3')">3</button>
+                        <button class="calc-btn op" onclick="calcEquals()" style="grid-row: span 2; display:flex; align-items:center; justify-content:center;">=</button>
+
+                        <button class="calc-btn" onclick="calcInput('0')" style="grid-column: span 2;">0</button>
+                        <button class="calc-btn" onclick="calcInput('.')">.</button>
+                    </div>
+
+                    <button class="action-btn btn-primary" style="margin-top:14px;" onclick="copyCalcToFinance()">Вставить в сумму расходов/доходов</button>
+                </div>
+            </div>
         </div>
+
+        <!-- Вкладка 5: БЭКАП -->
+        <div id="settings" class="tab-content" style="display:none;">
+            <div class="card">
+                <label>Резервное копирование</label>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 0;">Скачай файл для переноса данных между устройствами.</p>
+                <button class="action-btn btn-primary" onclick="exportData()">📥 Скачать бэкап (JSON)</button>
+                <label style="margin-top: 15px;">Восстановить из файла</label>
+                <input type="file" id="importFile" accept=".json" onchange="importData(event)">
+            </div>
+            <div class="card">
+                <button class="action-btn btn-red" onclick="clearAllData()">⚠️ Сбросить все данные</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -426,14 +475,12 @@
         let selectedColor = 'sage';
         let editingNoteId = null;
 
-        // Переключение Темы
         if (localStorage.getItem('my_theme') === 'light') document.body.classList.add('light-theme');
         function toggleTheme() {
             document.body.classList.toggle('light-theme');
             localStorage.setItem('my_theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
         }
 
-        // Вызов шторки поиска
         function toggleDrawer() {
             document.getElementById('drawer').classList.toggle('active');
             document.getElementById('drawerOverlay').classList.toggle('active');
@@ -463,7 +510,6 @@
             el.classList.add('selected');
         }
 
-        // --- РАБОТА С ЗАМЕТКАМИ И СТИКЕРАМИ ---
         function saveNote() {
             const text = document.getElementById('taskText').value.trim();
             const category = document.getElementById('noteCategory').value;
@@ -477,7 +523,7 @@
 
             resetNoteForm();
             saveAndRender();
-            openTab('home'); // Сразу переходим на главную посмотреть результат!
+            openTab('home');
         }
 
         function editNote(id) {
@@ -508,7 +554,6 @@
         }
 
         function renderNotesAndStickers() {
-            // Отрисовка на Главной Доске
             const board = document.getElementById('stickersBoard');
             if (notes.length === 0) {
                 board.innerHTML = '<p style="color:var(--text-secondary); font-size:13px; grid-column: 1/-1;">На доске пока нет стикеров. Перейди во вкладку «Заметки» и создай первую запись!</p>';
@@ -530,7 +575,6 @@
                 `).join('');
             }
 
-            // Отрисовка во вкладке "Заметки"
             const list = document.getElementById('tasksList');
             if (notes.length === 0) {
                 list.innerHTML = '<p style="color:var(--text-secondary); font-size:13px;">Записей нет</p>';
@@ -553,7 +597,6 @@
             }
         }
 
-        // --- ТРЕНИРОВКИ ---
         function addWorkout() {
             const ex = document.getElementById('workEx').value.trim();
             const weight = document.getElementById('workWeight').value.trim();
@@ -579,7 +622,6 @@
             `).join('');
         }
 
-        // --- ФИНАНСЫ И КАЛЬКУЛЯТОР ---
         function switchFinSubTab(type) {
             document.getElementById('finSubOps').style.display = type === 'ops' ? 'block' : 'none';
             document.getElementById('finSubCalc').style.display = type === 'calc' ? 'block' : 'none';
@@ -609,13 +651,12 @@
             container.innerHTML = finance.map(f => `
                 <div class="list-item">
                     <div class="item-info"><div class="item-title">${escapeHtml(f.title)}</div><div class="item-sub"><span class="badge">${f.date}</span></div></div>
-                    <div style="margin-right:10px; font-weight:700;" class="${f.type === 'income' ? 'income-text' : 'expense-text'}">${f.type === 'income' ? '+' : '-'}${f.amount} ₼</div>
+                    <div style="margin-right:10px; font-weight:700; font-size:14px; color:${f.type === 'income' ? 'var(--accent-green)' : 'var(--accent-red)'};">${f.type === 'income' ? '+' : '-'}${f.amount} ₼</div>
                     <button class="del-btn" onclick="deleteFinance(${f.id})">✕</button>
                 </div>
             `).join('');
         }
 
-        // Логика Калькулятора
         let calcVal = '0';
         function calcInput(val) {
             if (val === 'C') { calcVal = '0'; }
@@ -645,11 +686,10 @@
             }
         }
 
-        // --- ВПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
         function openTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
             document.querySelectorAll('.nav button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
+            document.getElementById(tabName).style.display = 'block';
             document.getElementById('btn-' + tabName).classList.add('active');
         }
 
@@ -703,7 +743,6 @@
 
         function escapeHtml(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
-        // Инициализация
         document.getElementById('currentDateStr').innerText = 'Сегодня: ' + getTodayDate();
         saveAndRender();
         if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
