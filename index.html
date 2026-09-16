@@ -20,7 +20,6 @@
             --header-bg: rgba(15, 19, 21, 0.9);
             --badge-bg: rgba(255, 255, 255, 0.06);
 
-            /* Стикеры */
             --st-sage: #182c23;
             --st-sand: #2a2319;
             --st-clay: #2b1b19;
@@ -58,31 +57,19 @@
             min-height: 100vh;
         }
 
-        /* Центрирующий узкий контейнер для аккуратности */
-        .app-container {
-            max-width: 580px;
-            margin: 0 auto;
-            padding: 0 14px;
-        }
+        .app-container { max-width: 580px; margin: 0 auto; padding: 0 14px; }
 
         /* Шапка */
         .top-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            z-index: 100;
-            background: var(--header-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--card-border);
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+            background: var(--header-bg); backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--card-border);
         }
 
         .header-inner {
-            max-width: 580px;
-            margin: 0 auto;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 8px 14px;
+            max-width: 580px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between; padding: 8px 14px;
         }
-
         .header-inner h1 { margin: 0; font-size: 16px; font-weight: 700; }
 
         .icon-btn {
@@ -91,7 +78,7 @@
             display: flex; align-items: center; justify-content: center;
         }
         .icon-btn:active { background: var(--card-border); }
-        .icon-btn svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .icon-btn svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2; }
 
         /* Табы-сегменты */
         .nav-wrapper { max-width: 580px; margin: 0 auto; padding: 0 10px 8px 10px; }
@@ -109,10 +96,8 @@
 
         /* Карточки */
         .card { 
-            background: var(--card-bg); 
-            padding: 14px; 
-            border-radius: 16px; 
-            margin-bottom: 12px; 
+            background: var(--card-bg); padding: 14px; 
+            border-radius: 16px; margin-bottom: 12px; 
             border: 1px solid var(--card-border);
         }
 
@@ -126,9 +111,9 @@
 
         .stats-grid { display: flex; gap: 8px; margin-top: 10px; }
         .stat-badge { flex: 1; background: rgba(255,255,255,0.08); padding: 8px; border-radius: 10px; text-align: center; font-size: 10.5px; }
-        .stat-badge strong { display: block; font-size: 14px; margin-top: 2px; }
+        .stat-badge strong { display: block; font-size: 13.5px; margin-top: 2px; }
 
-        /* Доска Стиреров */
+        /* Доска Стикеров */
         .stickers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 8px; }
         .sticker-card {
             padding: 12px; border-radius: 14px; min-height: 110px;
@@ -145,40 +130,29 @@
         .sticker-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 10.5px; opacity: 0.75; }
         .mini-btn { background: rgba(0,0,0,0.15); border: none; padding: 3px 6px; border-radius: 5px; font-size: 10.5px; cursor: pointer; color: inherit; }
 
-        /* ЭЛЕМЕНТЫ ФОРМ И КОМПАКТНЫЙ ВИДЖЕТ ВВОДА */
+        /* ЭЛЕМЕНТЫ ФОРМ И КОМПАКТНЫЕ ВИДЖЕТЫ */
         label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 5px; display: block; }
         
         input, select, textarea {
-            width: 100%; padding: 9px 11px; border-radius: 10px; 
-            border: 1px solid var(--card-border); font-size: 13.5px; 
+            width: 100%; padding: 8px 10px; border-radius: 10px; 
+            border: 1px solid var(--card-border); font-size: 13px; 
             outline: none; background: var(--input-bg); color: var(--text-primary);
         }
 
-        /* Виджет быстрой заметки (Google Keep style) */
+        /* Виджет быстрой заметки */
         .note-widget {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 12px;
-            margin-bottom: 12px;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 12px; margin-bottom: 12px;
         }
-        .note-widget textarea {
-            border: none; background: transparent; padding: 0;
-            resize: none; font-size: 14px; margin-bottom: 8px;
-        }
-        .note-toolbar {
-            display: flex; align-items: center; justify-content: space-between;
-            border-top: 1px solid var(--card-border); padding-top: 8px; gap: 6px;
-        }
-        .note-tools-left { display: flex; align-items: center; gap: 8px; }
-        
+        .note-widget textarea { border: none; background: transparent; padding: 0; resize: none; font-size: 14px; margin-bottom: 8px; }
+        .note-toolbar { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--card-border); padding-top: 8px; gap: 6px; }
         .color-picker-mini { display: flex; gap: 6px; }
         .color-opt { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
         .color-opt.selected { border-color: var(--text-primary); transform: scale(1.15); }
 
         /* Компактные Кнопки */
         .btn-compact {
-            padding: 7px 14px; font-size: 12.5px; font-weight: 600;
+            padding: 7px 14px; font-size: 12px; font-weight: 600;
             border-radius: 9px; border: none; cursor: pointer;
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
             white-space: nowrap;
@@ -188,18 +162,33 @@
         .btn-green { background: var(--accent-green); color: white; }
         .btn-red { background: var(--accent-red); color: white; }
 
-        /* Сетки для компактных форм */
         .form-grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin-bottom: 8px; }
         .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
 
-        /* Подвкладки внутри Финансов */
-        .sub-nav { display: flex; background: var(--input-bg); padding: 3px; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--card-border); }
-        .sub-nav button {
-            flex: 1; padding: 6px; border-radius: 8px; border: none;
-            background: transparent; color: var(--text-secondary); font-size: 12px; font-weight: 600; cursor: pointer;
+        /* Карточки Счетов в Финансах */
+        .accounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+        .account-card {
+            background: var(--input-bg); border: 1px solid var(--card-border);
+            padding: 10px; border-radius: 12px; text-align: center;
         }
-        .sub-nav button.active { background: var(--card-bg); color: var(--text-primary); }
+        .account-card .title { font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; }
+        .account-card .val { font-size: 14px; font-weight: 700; margin-top: 2px; color: var(--text-primary); }
+        .account-card .sub-val { font-size: 9.5px; color: var(--accent-red); margin-top: 2px; font-weight: 600; }
 
+        /* Переключатель категорий расходов (Подвкладки) */
+        .cat-scroll-nav {
+            display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px;
+            scrollbar-width: none;
+        }
+        .cat-scroll-nav::-webkit-scrollbar { display: none; }
+        .cat-chip {
+            background: var(--input-bg); border: 1px solid var(--card-border);
+            padding: 5px 11px; border-radius: 20px; font-size: 11px; font-weight: 600;
+            color: var(--text-secondary); white-space: nowrap; cursor: pointer; transition: all 0.15s;
+        }
+        .cat-chip.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        /* Калькулятор */
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
         .calc-btn { padding: 12px; font-size: 16px; font-weight: 600; border-radius: 10px; border: 1px solid var(--card-border); background: var(--input-bg); color: var(--text-primary); cursor: pointer; text-align: center; }
         .calc-btn.op { background: var(--accent); color: white; }
@@ -208,10 +197,10 @@
         .list-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--card-border); }
         .list-item:last-child { border-bottom: none; }
         .item-info { flex-grow: 1; padding-right: 8px; }
-        .item-title { font-weight: 600; font-size: 13.5px; color: var(--text-primary); }
-        .item-sub { font-size: 11px; color: var(--text-secondary); margin-top: 3px; display: flex; gap: 5px; }
+        .item-title { font-weight: 600; font-size: 13px; color: var(--text-primary); }
+        .item-sub { font-size: 10.5px; color: var(--text-secondary); margin-top: 3px; display: flex; gap: 5px; flex-wrap: wrap; }
         
-        .badge { background: var(--badge-bg); padding: 2px 6px; border-radius: 5px; font-size: 10px; }
+        .badge { background: var(--badge-bg); padding: 2px 6px; border-radius: 5px; font-size: 9.5px; }
         .del-btn { background: rgba(189, 76, 70, 0.12); color: var(--accent-red); padding: 4px 8px; border-radius: 6px; font-size: 11px; border: none; cursor: pointer; }
 
         /* Шторка Поиска */
@@ -264,7 +253,7 @@
     <!-- Поиск -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
     <div class="drawer" id="drawer">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; justify-style:space-between; align-items:center;">
             <h3 style="margin:0; font-size:15px;">Поиск по дневнику</h3>
             <button class="icon-btn" onclick="toggleDrawer()">✕</button>
         </div>
@@ -283,8 +272,8 @@
                 
                 <div class="stats-grid">
                     <div class="stat-badge">Заметки<strong id="statNotesCount">0</strong></div>
-                    <div class="stat-badge">Баланс<strong id="statBalance">0 ₼</strong></div>
-                    <div class="stat-badge">Тренировки<strong id="statWorkoutsCount">0</strong></div>
+                    <div class="stat-badge">Наличные<strong id="statCash">0 ₼</strong></div>
+                    <div class="stat-badge">Долг (Кредитка)<strong id="statCreditDebt" style="color:#e07a75;">0 ₼</strong></div>
                 </div>
             </div>
 
@@ -292,15 +281,14 @@
             <div id="stickersBoard" class="stickers-grid"></div>
         </div>
 
-        <!-- Вкладка 2: ЗАМЕТКИ (Компактный виджет) -->
+        <!-- Вкладка 2: ЗАМЕТКИ -->
         <div id="tasks" class="tab-content" style="display:none;">
-            
             <div class="note-widget">
                 <textarea id="taskText" rows="3" placeholder="Напиши заметку, рецепт или мысль..."></textarea>
                 
                 <div class="note-toolbar">
-                    <div class="note-tools-left">
-                        <select id="noteCategory" style="width: auto; padding: 4px 8px; font-size: 11.5px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <select id="noteCategory" style="width: auto; padding: 4px 8px; font-size: 11px;">
                             <option value="Заметка">📝 Заметка</option>
                             <option value="Рецепт">🥗 Рецепт</option>
                             <option value="Идея">💡 Идея</option>
@@ -328,7 +316,7 @@
             </div>
         </div>
 
-        <!-- Вкладка 3: ТРЕНИРОВКИ (Компактная форма) -->
+        <!-- Вкладка 3: ТРЕНИРОВКИ -->
         <div id="workouts" class="tab-content" style="display:none;">
             <div class="card">
                 <label>Записать подход</label>
@@ -337,7 +325,7 @@
                     <input type="number" id="workWeight" placeholder="Вес (кг)">
                     <input type="text" id="workSets" placeholder="Подходы">
                 </div>
-                <div style="display:flex; justify-height:center; justify-content:flex-end;">
+                <div style="display:flex; justify-content:flex-end;">
                     <button class="btn-compact btn-primary" onclick="addWorkout()">+ Сохранить</button>
                 </div>
             </div>
@@ -348,76 +336,92 @@
             </div>
         </div>
 
-        <!-- Вкладка 4: ФИНАНСЫ (Компактная форма) -->
+        <!-- Вкладка 4: ФИНАНСЫ -->
         <div id="finance" class="tab-content" style="display:none;">
-            <div class="sub-nav">
-                <button class="active" id="subBtnOps" onclick="switchFinSubTab('ops')">💳 Операции</button>
-                <button id="subBtnCalc" onclick="switchFinSubTab('calc')">🧮 Калькулятор</button>
+            
+            <!-- Карточки Счетов -->
+            <div class="accounts-grid">
+                <div class="account-card">
+                    <div class="title">💵 Наличные</div>
+                    <div class="val" id="accCashVal">0 ₼</div>
+                </div>
+                <div class="account-card">
+                    <div class="title">💳 Зарплата</div>
+                    <div class="val" id="accSalaryVal">0 ₼</div>
+                </div>
+                <div class="account-card" style="border-color: rgba(189, 76, 70, 0.3);">
+                    <div class="title">💳 Кредитка</div>
+                    <div class="val" id="accCreditVal">500 ₼</div>
+                    <div class="sub-val" id="accCreditDebtVal">Долг: 0 ₼</div>
+                </div>
             </div>
 
-            <div id="finSubOps">
-                <div class="card" style="background: linear-gradient(135deg, #27563f 0%, #173727 100%); color:#fff; border:none; padding:12px 16px;">
-                    <span style="font-size: 10.5px; text-transform: uppercase; opacity: 0.85;">Текущий Баланс</span>
-                    <h1 style="margin: 2px 0 0 0; font-size: 26px;"><span id="balanceVal">0</span> ₼</h1>
-                </div>
+            <!-- Форма внесения Расхода / Дохода -->
+            <div class="card">
+                <label>Новая операция</label>
                 
-                <div class="card">
-                    <div class="form-grid-2">
-                        <div>
-                            <label>Сумма (₼)</label>
-                            <input type="number" id="finAmount" placeholder="0">
-                        </div>
-                        <div>
-                            <label>Категория</label>
-                            <input type="text" id="finTitle" placeholder="Еда, Зарплата...">
-                        </div>
+                <div class="form-grid-2">
+                    <div>
+                        <label>Счет</label>
+                        <select id="finAccount">
+                            <option value="cash">💵 Наличные</option>
+                            <option value="salary">💳 Карта Зарплата</option>
+                            <option value="credit">💳 Кредитка (500 ₼)</option>
+                        </select>
                     </div>
-                    <div style="display:flex; justify-content:flex-end; gap:6px;">
-                        <button class="btn-compact btn-green" onclick="addFinance('income')">+ Доход</button>
-                        <button class="btn-compact btn-red" onclick="addFinance('expense')">- Расход</button>
+                    <div>
+                        <label>Категория Расхода</label>
+                        <select id="finCategory">
+                            <option value="Дом">🏠 Дом</option>
+                            <option value="Ребенок">👶 Ребенок</option>
+                            <option value="Машина">🚗 Машина</option>
+                            <option value="Коммуналка">⚡ Коммуналка</option>
+                            <option value="Еда">🛒 Еда</option>
+                            <option value="Перекусы">🥪 Перекусы</option>
+                            <option value="Ресторан">🍽️ Ресторан</option>
+                            <option value="Гулять">🎉 Гулять</option>
+                            <option value="Доход">💰 Пополнение/Зарплата</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="card">
-                    <label>История операций</label>
-                    <div id="financeList"></div>
+                <div class="form-grid-2">
+                    <div>
+                        <label>Сумма (₼)</label>
+                        <input type="number" id="finAmount" placeholder="0">
+                    </div>
+                    <div>
+                        <label>Комментарий / Заметка</label>
+                        <input type="text" id="finComment" placeholder="Куда потратил или за что...">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:6px;">
+                    <button class="btn-compact btn-green" onclick="addFinanceTransaction('income')">+ Доход / Пополнение</button>
+                    <button class="btn-compact btn-red" onclick="addFinanceTransaction('expense')">- Списать Расход</button>
                 </div>
             </div>
 
-            <div id="finSubCalc" style="display:none;">
-                <div class="card">
-                    <label>Быстрый расчет</label>
-                    <input type="text" id="calcDisplay" readonly value="0" style="font-size:20px; text-align:right; font-weight:700;">
-                    
-                    <div class="calc-grid">
-                        <button class="calc-btn" onclick="calcInput('C')">C</button>
-                        <button class="calc-btn" onclick="calcInput('⌫')">⌫</button>
-                        <button class="calc-btn op" onclick="calcInput('/')">÷</button>
-                        <button class="calc-btn op" onclick="calcInput('*')">×</button>
+            <!-- Подвкладки Категорий Трат -->
+            <label>Фильтр расходов по категориям</label>
+            <div class="cat-scroll-nav" id="catFilterChips">
+                <div class="cat-chip active" onclick="filterFinCategory('all', this)">Все категории</div>
+                <div class="cat-chip" onclick="filterFinCategory('Дом', this)">🏠 Дом</div>
+                <div class="cat-chip" onclick="filterFinCategory('Ребенок', this)">👶 Ребенок</div>
+                <div class="cat-chip" onclick="filterFinCategory('Машина', this)">🚗 Машина</div>
+                <div class="cat-chip" onclick="filterFinCategory('Коммуналка', this)">⚡ Коммуналка</div>
+                <div class="cat-chip" onclick="filterFinCategory('Еда', this)">🛒 Еда</div>
+                <div class="cat-chip" onclick="filterFinCategory('Перекусы', this)">🥪 Перекусы</div>
+                <div class="cat-chip" onclick="filterFinCategory('Ресторан', this)">🍽️ Ресторан</div>
+                <div class="cat-chip" onclick="filterFinCategory('Гулять', this)">🎉 Гулять</div>
+            </div>
 
-                        <button class="calc-btn" onclick="calcInput('7')">7</button>
-                        <button class="calc-btn" onclick="calcInput('8')">8</button>
-                        <button class="calc-btn" onclick="calcInput('9')">9</button>
-                        <button class="calc-btn op" onclick="calcInput('-')">-</button>
-
-                        <button class="calc-btn" onclick="calcInput('4')">4</button>
-                        <button class="calc-btn" onclick="calcInput('5')">5</button>
-                        <button class="calc-btn" onclick="calcInput('6')">6</button>
-                        <button class="calc-btn op" onclick="calcInput('+')">+</button>
-
-                        <button class="calc-btn" onclick="calcInput('1')">1</button>
-                        <button class="calc-btn" onclick="calcInput('2')">2</button>
-                        <button class="calc-btn" onclick="calcInput('3')">3</button>
-                        <button class="calc-btn op" onclick="calcEquals()" style="grid-row: span 2; display:flex; align-items:center; justify-content:center;">=</button>
-
-                        <button class="calc-btn" onclick="calcInput('0')" style="grid-column: span 2;">0</button>
-                        <button class="calc-btn" onclick="calcInput('.')">.</button>
-                    </div>
-
-                    <div style="display:flex; justify-content:flex-end; margin-top:10px;">
-                        <button class="btn-compact btn-primary" onclick="copyCalcToFinance()">Вставить в сумму</button>
-                    </div>
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <label style="margin:0;">История операций</label>
+                    <span id="categoryTotalSum" style="font-size:11px; font-weight:700; color:var(--text-secondary);"></span>
                 </div>
+                <div id="financeList"></div>
             </div>
         </div>
 
@@ -440,10 +444,17 @@
     <script>
         let notes = JSON.parse(localStorage.getItem('my_notes') || '[]');
         let workouts = JSON.parse(localStorage.getItem('my_workouts') || '[]');
-        let finance = JSON.parse(localStorage.getItem('my_finance') || '[]');
+        let finance = JSON.parse(localStorage.getItem('my_finance_transactions') || '[]');
         
+        let accounts = JSON.parse(localStorage.getItem('my_accounts') || JSON.stringify({
+            cash: 0,
+            salary: 0,
+            credit: 500 // Лимит 500 AZN
+        }));
+
         let selectedColor = 'sage';
         let editingNoteId = null;
+        let selectedCategoryFilter = 'all';
 
         if (localStorage.getItem('my_theme') === 'light') document.body.classList.add('light-theme');
         function toggleTheme() {
@@ -468,8 +479,8 @@
             workouts.filter(w => w.ex.toLowerCase().includes(query)).forEach(w => {
                 html += `<div class="list-item"><div class="item-info"><div class="item-title">🏋️ ${escapeHtml(w.ex)}</div></div></div>`;
             });
-            finance.filter(f => f.title.toLowerCase().includes(query)).forEach(f => {
-                html += `<div class="list-item"><div class="item-info"><div class="item-title">💰 ${escapeHtml(f.title)}</div></div></div>`;
+            finance.filter(f => (f.comment || '').toLowerCase().includes(query) || f.category.toLowerCase().includes(query)).forEach(f => {
+                html += `<div class="list-item"><div class="item-info"><div class="item-title">💰 ${escapeHtml(f.category)}: ${escapeHtml(f.comment || '')}</div></div></div>`;
             });
             container.innerHTML = html || '<p style="font-size:12px; color:var(--text-secondary);">Ничего не найдено</p>';
         }
@@ -590,68 +601,117 @@
             `).join('');
         }
 
-        function switchFinSubTab(type) {
-            document.getElementById('finSubOps').style.display = type === 'ops' ? 'block' : 'none';
-            document.getElementById('finSubCalc').style.display = type === 'calc' ? 'block' : 'none';
-            document.getElementById('subBtnOps').className = type === 'ops' ? 'active' : '';
-            document.getElementById('subBtnCalc').className = type === 'calc' ? 'active' : '';
+        /* --- ЛОГИКА ФИНАНСОВ --- */
+        function addFinanceTransaction(type) {
+            const acc = document.getElementById('finAccount').value;
+            const category = document.getElementById('finCategory').value;
+            const amount = parseFloat(document.getElementById('finAmount').value);
+            const comment = document.getElementById('finComment').value.trim();
+
+            if (!amount || amount <= 0) return;
+
+            // Обновляем счета
+            if (type === 'income') {
+                accounts[acc] += amount;
+            } else {
+                accounts[acc] -= amount;
+            }
+
+            finance.unshift({
+                id: Date.now(),
+                type,
+                account: acc,
+                category: type === 'income' ? 'Доход' : category,
+                amount,
+                comment: comment || 'Без комментария',
+                date: getTodayDate()
+            });
+
+            document.getElementById('finAmount').value = '';
+            document.getElementById('finComment').value = '';
+            saveAndRender();
         }
 
-        function addFinance(type) {
-            const amount = parseFloat(document.getElementById('finAmount').value);
-            const title = document.getElementById('finTitle').value.trim();
-            if (!amount || amount <= 0) return;
-            finance.unshift({ id: Date.now(), type, amount, title: title || (type === 'income' ? 'Доход' : 'Расход'), date: getTodayDate() });
+        function deleteFinanceTransaction(id) {
+            const tr = finance.find(f => f.id === id);
+            if (!tr) return;
+
+            // Откат счета
+            if (tr.type === 'income') {
+                accounts[tr.account] -= tr.amount;
+            } else {
+                accounts[tr.account] += tr.amount;
+            }
+
+            finance = finance.filter(f => f.id !== id);
             saveAndRender();
-            document.getElementById('finAmount').value = ''; document.getElementById('finTitle').value = '';
         }
-        function deleteFinance(id) { finance = finance.filter(f => f.id !== id); saveAndRender(); }
+
+        function filterFinCategory(cat, chipEl) {
+            selectedCategoryFilter = cat;
+            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+            chipEl.classList.add('active');
+            renderFinance();
+        }
+
+        function getAccountName(accKey) {
+            if (accKey === 'cash') return '💵 Наличные';
+            if (accKey === 'salary') return '💳 Зарплата';
+            if (accKey === 'credit') return '💳 Кредитка';
+            return accKey;
+        }
 
         function renderFinance() {
-            const container = document.getElementById('financeList');
-            let balance = 0;
-            finance.forEach(f => { if (f.type === 'income') balance += f.amount; else balance -= f.amount; });
+            // Отрисовка счетов
+            document.getElementById('accCashVal').innerText = accounts.cash.toLocaleString() + ' ₼';
+            document.getElementById('accSalaryVal').innerText = accounts.salary.toLocaleString() + ' ₼';
             
-            document.getElementById('balanceVal').innerText = balance.toLocaleString();
-            document.getElementById('statBalance').innerText = balance.toLocaleString() + ' ₼';
+            // Расчет кредитки и долга (Лимит 500 AZN)
+            const creditLimit = 500;
+            const creditDebt = creditLimit - accounts.credit; // Всё что ниже 500 — это долг
+            
+            document.getElementById('accCreditVal').innerText = accounts.credit.toLocaleString() + ' ₼';
+            document.getElementById('accCreditDebtVal').innerText = creditDebt > 0 ? `Долг: ${creditDebt.toLocaleString()} ₼` : 'Долга нет';
 
-            if (finance.length === 0) { container.innerHTML = '<p style="color:var(--text-secondary); font-size:12px;">История пуста</p>'; return; }
-            container.innerHTML = finance.map(f => `
+            // Главная виджеты
+            document.getElementById('statCash').innerText = accounts.cash.toLocaleString() + ' ₼';
+            document.getElementById('statCreditDebt').innerText = (creditDebt > 0 ? creditDebt.toLocaleString() : '0') + ' ₼';
+
+            // Список операций
+            const container = document.getElementById('financeList');
+            let filteredList = finance;
+            if (selectedCategoryFilter !== 'all') {
+                filteredList = finance.filter(f => f.category === selectedCategoryFilter);
+            }
+
+            // Подсчет суммы по выбранной категории
+            if (selectedCategoryFilter !== 'all') {
+                const totalSpentCat = filteredList.reduce((sum, f) => f.type === 'expense' ? sum + f.amount : sum, 0);
+                document.getElementById('categoryTotalSum').innerText = `Всего потрачено: ${totalSpentCat.toLocaleString()} ₼`;
+            } else {
+                document.getElementById('categoryTotalSum').innerText = '';
+            }
+
+            if (filteredList.length === 0) { 
+                container.innerHTML = '<p style="color:var(--text-secondary); font-size:12px;">Нет записей в этой категории</p>'; 
+                return; 
+            }
+
+            container.innerHTML = filteredList.map(f => `
                 <div class="list-item">
-                    <div class="item-info"><div class="item-title">${escapeHtml(f.title)}</div><div class="item-sub"><span class="badge">${f.date}</span></div></div>
-                    <div style="margin-right:8px; font-weight:700; font-size:13px; color:${f.type === 'income' ? 'var(--accent-green)' : 'var(--accent-red)'};">${f.type === 'income' ? '+' : '-'}${f.amount} ₼</div>
-                    <button class="del-btn" onclick="deleteFinance(${f.id})">✕</button>
+                    <div class="item-info">
+                        <div class="item-title">${escapeHtml(f.category)} ${f.comment ? '— ' + escapeHtml(f.comment) : ''}</div>
+                        <div class="item-sub">
+                            <span class="badge">${getAccountName(f.account)}</span>
+                            <span class="badge">${f.date}</span>
+                        </div>
+                    </div>
+                    <div style="margin-right:8px; font-weight:700; font-size:13px; color:${f.type === 'income' ? 'var(--accent-green)' : 'var(--accent-red)'};">
+                        ${f.type === 'income' ? '+' : '-'}${f.amount} ₼
+                    </div>
+                    <button class="del-btn" onclick="deleteFinanceTransaction(${f.id})">✕</button>
                 </div>
             `).join('');
-        }
-
-        let calcVal = '0';
-        function calcInput(val) {
-            if (val === 'C') { calcVal = '0'; }
-            else if (val === '⌫') { calcVal = calcVal.length > 1 ? calcVal.slice(0, -1) : '0'; }
-            else {
-                if (calcVal === '0' && val !== '.') calcVal = val;
-                else calcVal += val;
-            }
-            document.getElementById('calcDisplay').value = calcVal;
-        }
-
-        function calcEquals() {
-            try {
-                calcVal = eval(calcVal.replace(/×/g, '*').replace(/÷/g, '/')).toString();
-                document.getElementById('calcDisplay').value = calcVal;
-            } catch (e) {
-                document.getElementById('calcDisplay').value = 'Ошибка';
-                calcVal = '0';
-            }
-        }
-
-        function copyCalcToFinance() {
-            const val = parseFloat(document.getElementById('calcDisplay').value);
-            if (!isNaN(val)) {
-                document.getElementById('finAmount').value = val;
-                switchFinSubTab('ops');
-            }
         }
 
         function openTab(tabName) {
@@ -670,10 +730,10 @@
         function saveAndRender() {
             localStorage.setItem('my_notes', JSON.stringify(notes));
             localStorage.setItem('my_workouts', JSON.stringify(workouts));
-            localStorage.setItem('my_finance', JSON.stringify(finance));
+            localStorage.setItem('my_finance_transactions', JSON.stringify(finance));
+            localStorage.setItem('my_accounts', JSON.stringify(accounts));
 
             document.getElementById('statNotesCount').innerText = notes.length;
-            document.getElementById('statWorkoutsCount').innerText = workouts.length;
 
             renderNotesAndStickers();
             renderWorkouts();
@@ -681,7 +741,7 @@
         }
 
         function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ notes, workouts, finance }));
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ notes, workouts, finance, accounts }));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
             downloadAnchor.setAttribute("download", `my_diary_backup_${getTodayDate()}.json`);
@@ -697,6 +757,7 @@
                     if (data.notes) notes = data.notes;
                     if (data.workouts) workouts = data.workouts;
                     if (data.finance) finance = data.finance;
+                    if (data.accounts) accounts = data.accounts;
                     saveAndRender(); alert('Данные успешно восстановлены!');
                 } catch (err) { alert('Ошибка чтения файла бэкапа'); }
             };
@@ -705,7 +766,10 @@
 
         function clearAllData() {
             if (confirm('Сбросить и удалить абсолютно все данные?')) {
-                localStorage.clear(); notes = []; workouts = []; finance = []; saveAndRender();
+                localStorage.clear(); 
+                notes = []; workouts = []; finance = []; 
+                accounts = { cash: 0, salary: 0, credit: 500 };
+                saveAndRender();
             }
         }
 
