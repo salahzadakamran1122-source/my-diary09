@@ -1,783 +1,130 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#121619">
-    <title>Мой Дневник</title>
-    <link rel="manifest" href="manifest.json">
-    <style>
-        :root {
-            --bg-color: #0f1315;
-            --card-bg: #171d20;
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-primary: #ecf0ed;
-            --text-secondary: #829288;
-            --accent: #347852;
-            --accent-green: #297a4d;
-            --accent-red: #bd4c46;
-            --input-bg: #111618;
-            --header-bg: rgba(15, 19, 21, 0.9);
-            --badge-bg: rgba(255, 255, 255, 0.06);
-
-            --st-sage: #182c23;
-            --st-sand: #2a2319;
-            --st-clay: #2b1b19;
-            --st-ocean: #162430;
-        }
-
-        body.light-theme {
-            --bg-color: #f4f3ef;
-            --card-bg: #ffffff;
-            --card-border: #e3e0d8;
-            --text-primary: #18201c;
-            --text-secondary: #65746b;
-            --accent: #27563f;
-            --accent-green: #216941;
-            --accent-red: #af3e38;
-            --input-bg: #f9f8f4;
-            --header-bg: rgba(244, 243, 239, 0.9);
-            --badge-bg: #eae7e0;
-
-            --st-sage: #e1eee5;
-            --st-sand: #f6efe2;
-            --st-clay: #f6e7e4;
-            --st-ocean: #e1ebf1;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif; 
-            margin: 0; 
-            padding-top: 105px; 
-            padding-bottom: 30px;
-            background-color: var(--bg-color); 
-            color: var(--text-primary);
-            min-height: 100vh;
-        }
-
-        .app-container { max-width: 580px; margin: 0 auto; padding: 0 14px; }
-
-        /* Шапка */
-        .top-container {
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
-            background: var(--header-bg); backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--card-border);
-        }
-
-        .header-inner {
-            max-width: 580px; margin: 0 auto;
-            display: flex; align-items: center; justify-content: space-between; padding: 8px 14px;
-        }
-        .header-inner h1 { margin: 0; font-size: 16px; font-weight: 700; }
-
-        .icon-btn {
-            background: transparent; border: none; color: var(--text-primary);
-            padding: 6px; border-radius: 8px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .icon-btn:active { background: var(--card-border); }
-        .icon-btn svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2; }
-
-        /* Табы-сегменты */
-        .nav-wrapper { max-width: 580px; margin: 0 auto; padding: 0 10px 8px 10px; }
-        .nav { display: flex; background: var(--input-bg); padding: 3px; border-radius: 12px; border: 1px solid var(--card-border); }
-        .nav button { 
-            flex: 1; padding: 6px 0; border: none; border-radius: 9px;
-            background: transparent; color: var(--text-secondary); 
-            font-size: 11px; font-weight: 600; display: flex; 
-            flex-direction: column; align-items: center; gap: 2px; cursor: pointer;
-            transition: all 0.15s;
-        }
-        .nav button.active { background: var(--card-bg); color: var(--text-primary); box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
-        .nav button.active svg { stroke: var(--accent); }
-        .nav svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
-
-        /* Карточки */
-        .card { 
-            background: var(--card-bg); padding: 14px; 
-            border-radius: 16px; margin-bottom: 12px; 
-            border: 1px solid var(--card-border);
-        }
-
-        /* Приветственный Баннер */
-        .welcome-card {
-            background: linear-gradient(135deg, #1d3629 0%, #12241b 100%);
-            color: #e8ece9; border: 1px solid rgba(255,255,255,0.1);
-            padding: 16px; border-radius: 18px; margin-bottom: 14px;
-        }
-        body.light-theme .welcome-card { background: linear-gradient(135deg, #27563f 0%, #193b2a 100%); color: #ffffff; }
-
-        .stats-grid { display: flex; gap: 8px; margin-top: 10px; }
-        .stat-badge { flex: 1; background: rgba(255,255,255,0.08); padding: 8px; border-radius: 10px; text-align: center; font-size: 10.5px; }
-        .stat-badge strong { display: block; font-size: 13.5px; margin-top: 2px; }
-
-        /* Доска Стикеров */
-        .stickers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 8px; }
-        .sticker-card {
-            padding: 12px; border-radius: 14px; min-height: 110px;
-            display: flex; flex-direction: column; justify-content: space-between;
-            border: 1px solid var(--card-border); word-break: break-word;
-        }
-        .sticker-card.sage { background-color: var(--st-sage); }
-        .sticker-card.sand { background-color: var(--st-sand); }
-        .sticker-card.clay { background-color: var(--st-clay); }
-        .sticker-card.ocean { background-color: var(--st-ocean); }
-
-        .sticker-tag { font-size: 9.5px; font-weight: 700; text-transform: uppercase; opacity: 0.7; margin-bottom: 4px; }
-        .sticker-text { font-size: 13px; font-weight: 500; line-height: 1.35; white-space: pre-wrap; }
-        .sticker-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 10.5px; opacity: 0.75; }
-        .mini-btn { background: rgba(0,0,0,0.15); border: none; padding: 3px 6px; border-radius: 5px; font-size: 10.5px; cursor: pointer; color: inherit; }
-
-        /* ЭЛЕМЕНТЫ ФОРМ И КОМПАКТНЫЕ ВИДЖЕТЫ */
-        label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 5px; display: block; }
-        
-        input, select, textarea {
-            width: 100%; padding: 8px 10px; border-radius: 10px; 
-            border: 1px solid var(--card-border); font-size: 13px; 
-            outline: none; background: var(--input-bg); color: var(--text-primary);
-        }
-
-        /* Виджет быстрой заметки */
-        .note-widget {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: 16px; padding: 12px; margin-bottom: 12px;
-        }
-        .note-widget textarea { border: none; background: transparent; padding: 0; resize: none; font-size: 14px; margin-bottom: 8px; }
-        .note-toolbar { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--card-border); padding-top: 8px; gap: 6px; }
-        .color-picker-mini { display: flex; gap: 6px; }
-        .color-opt { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
-        .color-opt.selected { border-color: var(--text-primary); transform: scale(1.15); }
-
-        /* Компактные Кнопки */
-        .btn-compact {
-            padding: 7px 14px; font-size: 12px; font-weight: 600;
-            border-radius: 9px; border: none; cursor: pointer;
-            display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-            white-space: nowrap;
-        }
-        .btn-compact:active { opacity: 0.8; }
-        .btn-primary { background: var(--accent); color: white; }
-        .btn-green { background: var(--accent-green); color: white; }
-        .btn-red { background: var(--accent-red); color: white; }
-
-        .form-grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-
-        /* Карточки Счетов в Финансах */
-        .accounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
-        .account-card {
-            background: var(--input-bg); border: 1px solid var(--card-border);
-            padding: 10px; border-radius: 12px; text-align: center;
-        }
-        .account-card .title { font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; }
-        .account-card .val { font-size: 14px; font-weight: 700; margin-top: 2px; color: var(--text-primary); }
-        .account-card .sub-val { font-size: 9.5px; color: var(--accent-red); margin-top: 2px; font-weight: 600; }
-
-        /* Переключатель категорий расходов (Подвкладки) */
-        .cat-scroll-nav {
-            display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px;
-            scrollbar-width: none;
-        }
-        .cat-scroll-nav::-webkit-scrollbar { display: none; }
-        .cat-chip {
-            background: var(--input-bg); border: 1px solid var(--card-border);
-            padding: 5px 11px; border-radius: 20px; font-size: 11px; font-weight: 600;
-            color: var(--text-secondary); white-space: nowrap; cursor: pointer; transition: all 0.15s;
-        }
-        .cat-chip.active { background: var(--accent); color: white; border-color: var(--accent); }
-
-        /* Калькулятор */
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
-        .calc-btn { padding: 12px; font-size: 16px; font-weight: 600; border-radius: 10px; border: 1px solid var(--card-border); background: var(--input-bg); color: var(--text-primary); cursor: pointer; text-align: center; }
-        .calc-btn.op { background: var(--accent); color: white; }
-
-        /* Список элементов */
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--card-border); }
-        .list-item:last-child { border-bottom: none; }
-        .item-info { flex-grow: 1; padding-right: 8px; }
-        .item-title { font-weight: 600; font-size: 13px; color: var(--text-primary); }
-        .item-sub { font-size: 10.5px; color: var(--text-secondary); margin-top: 3px; display: flex; gap: 5px; flex-wrap: wrap; }
-        
-        .badge { background: var(--badge-bg); padding: 2px 6px; border-radius: 5px; font-size: 9.5px; }
-        .del-btn { background: rgba(189, 76, 70, 0.12); color: var(--accent-red); padding: 4px 8px; border-radius: 6px; font-size: 11px; border: none; cursor: pointer; }
-
-        /* Шторка Поиска */
-        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; opacity: 0; visibility: hidden; transition: all 0.2s; }
-        .drawer-overlay.active { opacity: 1; visibility: visible; }
-        .drawer { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card-bg); z-index: 201; padding: 16px; transition: transform 0.2s; border-right: 1px solid var(--card-border); }
-        .drawer.active { transform: translateX(280px); }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0d0f">
+<title>Мой Дневник — Premium</title>
+<style>
+:root{
+ --bg:#080b0d;--panel:#0f1417;--panel2:#13191d;--panel3:#171e23;--line:rgba(255,255,255,.075);
+ --text:#edf2ee;--muted:#8d9a93;--accent:#69b68a;--accent2:#3f8d65;--danger:#d77a73;--warn:#d8ad6b;
+ --shadow:0 18px 55px rgba(0,0,0,.28);--radius:18px;--radius-sm:12px;--sidebar:248px;
+}
+body.light{--bg:#f3f5f3;--panel:#fff;--panel2:#f7f8f7;--panel3:#eef2ef;--line:#dfe6e1;--text:#17201b;--muted:#6c786f;--accent:#2f8255;--accent2:#256a46;--danger:#b64d47;--warn:#9b6b2d;--shadow:0 18px 45px rgba(39,57,47,.08)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:flex}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:rgba(10,14,16,.88);backdrop-filter:blur(18px);border-right:1px solid var(--line);z-index:30;padding:22px 16px;display:flex;flex-direction:column}
+body.light .sidebar{background:rgba(255,255,255,.9)}
+.brand{display:flex;align-items:center;gap:12px;padding:4px 10px 24px}.brand-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,var(--accent),#234b37);display:grid;place-items:center;box-shadow:0 8px 25px rgba(60,140,98,.25)}.brand-mark svg{width:20px;height:20px}.brand-title strong{display:block;font-size:14px}.brand-title span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.nav-group{margin-top:10px}.nav-label{padding:0 10px 8px;color:var(--muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}.nav-item{width:100%;display:flex;align-items:center;gap:11px;border:0;background:transparent;color:var(--muted);padding:10px 11px;border-radius:12px;margin-bottom:3px;text-align:left;font-size:13px}.nav-item:hover{background:var(--panel2);color:var(--text)}.nav-item.active{background:linear-gradient(90deg,rgba(105,182,138,.16),rgba(105,182,138,.05));color:var(--text);box-shadow:inset 2px 0 0 var(--accent)}.nav-item svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8}
+.sidebar-footer{margin-top:auto}.profile-mini{display:flex;align-items:center;gap:10px;padding:10px;background:var(--panel2);border:1px solid var(--line);border-radius:14px}.avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,#34443c,#1a2520);display:grid;place-items:center;font-weight:700;font-size:12px}.profile-mini strong{font-size:12px}.profile-mini span{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.main{margin-left:var(--sidebar);width:calc(100% - var(--sidebar));min-height:100vh}.topbar{position:sticky;top:0;z-index:20;height:72px;background:rgba(8,11,13,.76);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px}.light .topbar{background:rgba(243,245,243,.78)}.topbar-left{display:flex;align-items:center;gap:12px}.mobile-menu{display:none}.page-title{font-size:19px;font-weight:700}.page-subtitle{font-size:11px;color:var(--muted);margin-top:3px}.top-actions{display:flex;align-items:center;gap:7px}.icon-btn{width:38px;height:38px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;display:grid;place-items:center}.icon-btn:hover{border-color:rgba(105,182,138,.35)}.icon-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}
+.content{padding:28px 30px 44px}.page{display:none;max-width:1500px;margin:0 auto}.page.active{display:block}
+.hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(330px,.65fr);gap:16px;margin-bottom:18px}.hero-card{background:linear-gradient(135deg,#1b3026,#101915 62%,#0d1214);border:1px solid rgba(105,182,138,.17);border-radius:24px;padding:28px;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero-card:after{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:-80px;top:-90px;background:radial-gradient(circle,rgba(105,182,138,.20),transparent 70%)}.hero-card h2{margin:0;font-size:25px;letter-spacing:-.02em}.hero-card p{margin:7px 0 18px;color:#b8c3bc;font-size:12px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat{padding:12px 13px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.045);border-radius:14px}.stat span{font-size:10px;color:#a8b3ad}.stat strong{display:block;margin-top:4px;font-size:17px}.quick{display:grid;grid-template-rows:1fr 1fr;gap:16px}.quick-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}.quick-head{display:flex;justify-content:space-between;align-items:center}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}.quick-value{font-size:25px;font-weight:750;margin-top:8px}.trend{font-size:10px;color:var(--accent);margin-top:4px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:26px 0 10px}.section-head h3{font-size:14px;margin:0}.section-head span{font-size:10px;color:var(--muted)}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.stickers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.sticker{min-height:140px;border-radius:16px;padding:14px;border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}.sticker.sage{background:linear-gradient(145deg,#183025,#14241d)}.sticker.sand{background:linear-gradient(145deg,#2a241a,#211c15)}.sticker.clay{background:linear-gradient(145deg,#2a1c1a,#211716)}.sticker.ocean{background:linear-gradient(145deg,#182834,#131f29)}.light .sticker.sage{background:#e6f0e9}.light .sticker.sand{background:#f6eee0}.light .sticker.clay{background:#f6e6e4}.light .sticker.ocean{background:#e4edf2}.sticker-tag{font-size:9px;letter-spacing:.08em;text-transform:uppercase;opacity:.7;font-weight:700}.sticker-text{font-size:13px;line-height:1.45;margin-top:8px;white-space:pre-wrap}.sticker-foot{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;margin-top:12px}.sticker-actions{display:flex;gap:4px}.mini-btn{border:1px solid var(--line);background:rgba(0,0,0,.08);color:inherit;border-radius:8px;width:27px;height:27px;display:grid;place-items:center}.mini-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.toolbar-left{display:flex;align-items:center;gap:7px}.pill{font-size:10px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--muted)}.primary{border:1px solid rgba(105,182,138,.35);background:linear-gradient(180deg,#4d9a70,#347653);color:white;padding:9px 13px;border-radius:11px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px}.primary svg,.success svg,.danger svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}.secondary{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:9px 12px;border-radius:11px;font-size:12px;font-weight:600}.success{background:#256a46;border:1px solid rgba(255,255,255,.07);color:#fff;padding:9px 12px;border-radius:11px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:5px}.danger{background:rgba(215,122,115,.13);color:var(--danger);border:1px solid rgba(215,122,115,.15);padding:9px 12px;border-radius:11px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:5px}
+.form{display:grid;gap:10px}.form-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}.form-row.two{grid-template-columns:1fr 1fr}.field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 11px;border-radius:11px;outline:none}.field textarea{resize:vertical;min-height:96px}.form-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:3px}
+.list{display:grid}.list-item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.list-item:last-child{border-bottom:0}.list-main{min-width:0;flex:1}.list-title{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.list-sub{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}.badge{font-size:9px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:3px 6px}.list-value{font-size:12px;font-weight:700}.list-value.in{color:var(--accent)}.list-value.out{color:var(--danger)}
+.accounts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.account{padding:15px;background:var(--panel);border:1px solid var(--line);border-radius:15px}.account-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:10px}.account-icon{width:28px;height:28px;border-radius:9px;background:var(--panel2);display:grid;place-items:center}.account-icon svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:1.8}.account strong{font-size:19px;margin-top:11px;display:block}.account small{display:block;margin-top:3px;color:var(--muted);font-size:9px}
+.chips{display:flex;gap:6px;overflow:auto;padding-bottom:5px}.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:7px 11px;font-size:10px}.chip.active{background:rgba(105,182,138,.12);color:var(--accent);border-color:rgba(105,182,138,.25)}
+.search-panel{display:none;position:fixed;inset:72px 30px auto 30px;max-width:640px;margin-left:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;z-index:50;box-shadow:var(--shadow)}.search-panel.open{display:block}.search-input{display:flex;gap:8px;align-items:center}.search-input input{flex:1}.search-results{margin-top:8px;max-height:55vh;overflow:auto}
+.empty{padding:25px 10px;text-align:center;color:var(--muted);font-size:12px;border:1px dashed var(--line);border-radius:14px}
+.mobile-overlay{display:none}
+@media(max-width:1000px){.grid-3{grid-template-columns:1fr 1fr}.stickers{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.accounts{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){:root{--sidebar:0px}.sidebar{transform:translateX(-100%);transition:transform .2s;width:260px}.sidebar.open{transform:none}.main{margin-left:0;width:100%}.mobile-menu{display:grid}.topbar{padding:0 15px;height:64px}.content{padding:18px 15px 35px}.mobile-overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:25}.hero-card{padding:21px}.hero-card h2{font-size:20px}.stats{grid-template-columns:1fr}.quick{grid-template-columns:1fr;grid-template-rows:auto auto}.grid-3,.grid-2,.accounts{grid-template-columns:1fr}.stickers{grid-template-columns:1fr}.form-row,.form-row.two{grid-template-columns:1fr}.toolbar{align-items:flex-start;flex-direction:column}.form-actions{justify-content:stretch}.form-actions button{flex:1}.search-panel{inset:64px 15px auto 15px}.top-actions .desktop-only{display:none}}
+</style>
 </head>
 <body>
-
-    <!-- Шапка -->
-    <div class="top-container">
-        <div class="header-inner">
-            <button class="icon-btn" onclick="toggleDrawer()">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-            </button>
-            <h1>Мой Дневник</h1>
-            <button class="icon-btn" onclick="toggleTheme()">
-                <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            </button>
-        </div>
-
-        <div class="nav-wrapper">
-            <div class="nav">
-                <button onclick="openTab('home')" class="active" id="btn-home">
-                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    <span>Главная</span>
-                </button>
-                <button onclick="openTab('tasks')" id="btn-tasks">
-                    <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    <span>Заметки</span>
-                </button>
-                <button onclick="openTab('workouts')" id="btn-workouts">
-                    <svg viewBox="0 0 24 24"><path d="M18 8h1a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-1"/><path d="M6 8H5a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h1"/><path d="M8 6h8v12H8z"/><path d="M12 6v12"/></svg>
-                    <span>Зал</span>
-                </button>
-                <button onclick="openTab('finance')" id="btn-finance">
-                    <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
-                    <span>Финансы</span>
-                </button>
-                <button onclick="openTab('settings')" id="btn-settings">
-                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    <span>Бэкап</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Поиск -->
-    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
-    <div class="drawer" id="drawer">
-        <div style="display:flex; justify-style:space-between; align-items:center;">
-            <h3 style="margin:0; font-size:15px;">Поиск по дневнику</h3>
-            <button class="icon-btn" onclick="toggleDrawer()">✕</button>
-        </div>
-        <input type="text" id="searchInput" placeholder="Найти запись..." oninput="searchEntries()" style="margin-top:12px;">
-        <div id="searchResults" style="max-height: 70vh; overflow-y: auto;"></div>
-    </div>
-
-    <!-- Основной Контейнер -->
-    <div class="app-container">
-        
-        <!-- Вкладка 1: ГЛАВНАЯ -->
-        <div id="home" class="tab-content" style="display:block;">
-            <div class="welcome-card">
-                <h2 style="margin:0; font-size: 18px;">👋 Рад видеть тебя!</h2>
-                <p style="margin: 4px 0 0 0; font-size: 12px; opacity: 0.85;" id="currentDateStr">Загрузка даты...</p>
-                
-                <div class="stats-grid">
-                    <div class="stat-badge">Заметки<strong id="statNotesCount">0</strong></div>
-                    <div class="stat-badge">Наличные<strong id="statCash">0 ₼</strong></div>
-                    <div class="stat-badge">Долг (Кредитка)<strong id="statCreditDebt" style="color:#e07a75;">0 ₼</strong></div>
-                </div>
-            </div>
-
-            <label style="margin-bottom:6px;">📌 Доска записей и результатов</label>
-            <div id="stickersBoard" class="stickers-grid"></div>
-        </div>
-
-        <!-- Вкладка 2: ЗАМЕТКИ -->
-        <div id="tasks" class="tab-content" style="display:none;">
-            <div class="note-widget">
-                <textarea id="taskText" rows="3" placeholder="Напиши заметку, рецепт или мысль..."></textarea>
-                
-                <div class="note-toolbar">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <select id="noteCategory" style="width: auto; padding: 4px 8px; font-size: 11px;">
-                            <option value="Заметка">📝 Заметка</option>
-                            <option value="Рецепт">🥗 Рецепт</option>
-                            <option value="Идея">💡 Идея</option>
-                            <option value="Важное">⚠️ Важное</option>
-                        </select>
-
-                        <div class="color-picker-mini">
-                            <div class="color-opt selected" style="background:#297a4d;" onclick="selectStickerColor('sage', this)"></div>
-                            <div class="color-opt" style="background:#a3855c;" onclick="selectStickerColor('sand', this)"></div>
-                            <div class="color-opt" style="background:#bd4c46;" onclick="selectStickerColor('clay', this)"></div>
-                            <div class="color-opt" style="background:#326587;" onclick="selectStickerColor('ocean', this)"></div>
-                        </div>
-                    </div>
-
-                    <div style="display:flex; gap:6px;">
-                        <button class="btn-compact" id="cancelEditBtn" onclick="resetNoteForm()" style="display:none; background:var(--badge-bg); color:var(--text-primary);">Отмена</button>
-                        <button class="btn-compact btn-primary" id="saveNoteBtn" onclick="saveNote()">+ Сохранить</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <label>Все твои записи</label>
-                <div id="tasksList"></div>
-            </div>
-        </div>
-
-        <!-- Вкладка 3: ТРЕНИРОВКИ -->
-        <div id="workouts" class="tab-content" style="display:none;">
-            <div class="card">
-                <label>Записать подход</label>
-                <div class="form-grid-3">
-                    <input type="text" id="workEx" placeholder="Упражнение">
-                    <input type="number" id="workWeight" placeholder="Вес (кг)">
-                    <input type="text" id="workSets" placeholder="Подходы">
-                </div>
-                <div style="display:flex; justify-content:flex-end;">
-                    <button class="btn-compact btn-primary" onclick="addWorkout()">+ Сохранить</button>
-                </div>
-            </div>
-            
-            <div class="card">
-                <label>История в зале</label>
-                <div id="workoutsList"></div>
-            </div>
-        </div>
-
-        <!-- Вкладка 4: ФИНАНСЫ -->
-        <div id="finance" class="tab-content" style="display:none;">
-            
-            <!-- Карточки Счетов -->
-            <div class="accounts-grid">
-                <div class="account-card">
-                    <div class="title">💵 Наличные</div>
-                    <div class="val" id="accCashVal">0 ₼</div>
-                </div>
-                <div class="account-card">
-                    <div class="title">💳 Зарплата</div>
-                    <div class="val" id="accSalaryVal">0 ₼</div>
-                </div>
-                <div class="account-card" style="border-color: rgba(189, 76, 70, 0.3);">
-                    <div class="title">💳 Кредитка</div>
-                    <div class="val" id="accCreditVal">500 ₼</div>
-                    <div class="sub-val" id="accCreditDebtVal">Долг: 0 ₼</div>
-                </div>
-            </div>
-
-            <!-- Форма внесения Расхода / Дохода -->
-            <div class="card">
-                <label>Новая операция</label>
-                
-                <div class="form-grid-2">
-                    <div>
-                        <label>Счет</label>
-                        <select id="finAccount">
-                            <option value="cash">💵 Наличные</option>
-                            <option value="salary">💳 Карта Зарплата</option>
-                            <option value="credit">💳 Кредитка (500 ₼)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Категория Расхода</label>
-                        <select id="finCategory">
-                            <option value="Дом">🏠 Дом</option>
-                            <option value="Ребенок">👶 Ребенок</option>
-                            <option value="Машина">🚗 Машина</option>
-                            <option value="Коммуналка">⚡ Коммуналка</option>
-                            <option value="Еда">🛒 Еда</option>
-                            <option value="Перекусы">🥪 Перекусы</option>
-                            <option value="Ресторан">🍽️ Ресторан</option>
-                            <option value="Гулять">🎉 Гулять</option>
-                            <option value="Доход">💰 Пополнение/Зарплата</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-grid-2">
-                    <div>
-                        <label>Сумма (₼)</label>
-                        <input type="number" id="finAmount" placeholder="0">
-                    </div>
-                    <div>
-                        <label>Комментарий / Заметка</label>
-                        <input type="text" id="finComment" placeholder="Куда потратил или за что...">
-                    </div>
-                </div>
-
-                <div style="display:flex; justify-content:flex-end; gap:6px;">
-                    <button class="btn-compact btn-green" onclick="addFinanceTransaction('income')">+ Доход / Пополнение</button>
-                    <button class="btn-compact btn-red" onclick="addFinanceTransaction('expense')">- Списать Расход</button>
-                </div>
-            </div>
-
-            <!-- Подвкладки Категорий Трат -->
-            <label>Фильтр расходов по категориям</label>
-            <div class="cat-scroll-nav" id="catFilterChips">
-                <div class="cat-chip active" onclick="filterFinCategory('all', this)">Все категории</div>
-                <div class="cat-chip" onclick="filterFinCategory('Дом', this)">🏠 Дом</div>
-                <div class="cat-chip" onclick="filterFinCategory('Ребенок', this)">👶 Ребенок</div>
-                <div class="cat-chip" onclick="filterFinCategory('Машина', this)">🚗 Машина</div>
-                <div class="cat-chip" onclick="filterFinCategory('Коммуналка', this)">⚡ Коммуналка</div>
-                <div class="cat-chip" onclick="filterFinCategory('Еда', this)">🛒 Еда</div>
-                <div class="cat-chip" onclick="filterFinCategory('Перекусы', this)">🥪 Перекусы</div>
-                <div class="cat-chip" onclick="filterFinCategory('Ресторан', this)">🍽️ Ресторан</div>
-                <div class="cat-chip" onclick="filterFinCategory('Гулять', this)">🎉 Гулять</div>
-            </div>
-
-            <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <label style="margin:0;">История операций</label>
-                    <span id="categoryTotalSum" style="font-size:11px; font-weight:700; color:var(--text-secondary);"></span>
-                </div>
-                <div id="financeList"></div>
-            </div>
-        </div>
-
-        <!-- Вкладка 5: БЭКАП -->
-        <div id="settings" class="tab-content" style="display:none;">
-            <div class="card">
-                <label>Резервное копирование</label>
-                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 0;">Скачай файл для переноса данных между устройствами.</p>
-                <button class="btn-compact btn-primary" onclick="exportData()">📥 Скачать бэкап (JSON)</button>
-                <label style="margin-top: 14px;">Восстановить из файла</label>
-                <input type="file" id="importFile" accept=".json" onchange="importData(event)" style="font-size:12px;">
-            </div>
-            <div class="card">
-                <button class="btn-compact btn-red" onclick="clearAllData()">⚠️ Сбросить данные</button>
-            </div>
-        </div>
-
-    </div>
-
-    <script>
-        let notes = JSON.parse(localStorage.getItem('my_notes') || '[]');
-        let workouts = JSON.parse(localStorage.getItem('my_workouts') || '[]');
-        let finance = JSON.parse(localStorage.getItem('my_finance_transactions') || '[]');
-        
-        let accounts = JSON.parse(localStorage.getItem('my_accounts') || JSON.stringify({
-            cash: 0,
-            salary: 0,
-            credit: 500 // Лимит 500 AZN
-        }));
-
-        let selectedColor = 'sage';
-        let editingNoteId = null;
-        let selectedCategoryFilter = 'all';
-
-        if (localStorage.getItem('my_theme') === 'light') document.body.classList.add('light-theme');
-        function toggleTheme() {
-            document.body.classList.toggle('light-theme');
-            localStorage.setItem('my_theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
-        }
-
-        function toggleDrawer() {
-            document.getElementById('drawer').classList.toggle('active');
-            document.getElementById('drawerOverlay').classList.toggle('active');
-        }
-
-        function searchEntries() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            const container = document.getElementById('searchResults');
-            if (!query) { container.innerHTML = ''; return; }
-
-            let html = '';
-            notes.filter(n => n.text.toLowerCase().includes(query)).forEach(n => {
-                html += `<div class="list-item"><div class="item-info"><div class="item-title">📌 ${escapeHtml(n.text)}</div></div></div>`;
-            });
-            workouts.filter(w => w.ex.toLowerCase().includes(query)).forEach(w => {
-                html += `<div class="list-item"><div class="item-info"><div class="item-title">🏋️ ${escapeHtml(w.ex)}</div></div></div>`;
-            });
-            finance.filter(f => (f.comment || '').toLowerCase().includes(query) || f.category.toLowerCase().includes(query)).forEach(f => {
-                html += `<div class="list-item"><div class="item-info"><div class="item-title">💰 ${escapeHtml(f.category)}: ${escapeHtml(f.comment || '')}</div></div></div>`;
-            });
-            container.innerHTML = html || '<p style="font-size:12px; color:var(--text-secondary);">Ничего не найдено</p>';
-        }
-
-        function selectStickerColor(color, el) {
-            selectedColor = color;
-            document.querySelectorAll('.color-opt').forEach(c => c.classList.remove('selected'));
-            el.classList.add('selected');
-        }
-
-        function saveNote() {
-            const text = document.getElementById('taskText').value.trim();
-            const category = document.getElementById('noteCategory').value;
-            if (!text) return;
-
-            if (editingNoteId) {
-                notes = notes.map(n => n.id === editingNoteId ? { ...n, text, category, color: selectedColor } : n);
-            } else {
-                notes.unshift({ id: Date.now(), text, category, color: selectedColor, date: getTodayDate() });
-            }
-
-            resetNoteForm();
-            saveAndRender();
-            openTab('home');
-        }
-
-        function editNote(id) {
-            const n = notes.find(item => item.id === id);
-            if (!n) return;
-            editingNoteId = id;
-            document.getElementById('taskText').value = n.text;
-            document.getElementById('noteCategory').value = n.category || 'Заметка';
-            document.getElementById('saveNoteBtn').innerText = 'Сохранить';
-            document.getElementById('cancelEditBtn').style.display = 'inline-flex';
-            
-            selectedColor = n.color || 'sage';
-            openTab('tasks');
-        }
-
-        function resetNoteForm() {
-            editingNoteId = null;
-            document.getElementById('taskText').value = '';
-            document.getElementById('saveNoteBtn').innerText = '+ Сохранить';
-            document.getElementById('cancelEditBtn').style.display = 'none';
-        }
-
-        function deleteNote(id) {
-            notes = notes.filter(n => n.id !== id);
-            saveAndRender();
-        }
-
-        function renderNotesAndStickers() {
-            const board = document.getElementById('stickersBoard');
-            if (notes.length === 0) {
-                board.innerHTML = '<p style="color:var(--text-secondary); font-size:12px; grid-column: 1/-1;">На доске пока нет стикеров. Перейди во вкладку «Заметки» и создай первую запись!</p>';
-            } else {
-                board.innerHTML = notes.map(n => `
-                    <div class="sticker-card ${n.color || 'sage'}">
-                        <div>
-                            <div class="sticker-tag">${escapeHtml(n.category || 'Заметка')}</div>
-                            <div class="sticker-text">${escapeHtml(n.text)}</div>
-                        </div>
-                        <div class="sticker-footer">
-                            <span>${n.date}</span>
-                            <div style="display:flex; gap:4px;">
-                                <button class="mini-btn" onclick="editNote(${n.id})">✏️</button>
-                                <button class="mini-btn" onclick="deleteNote(${n.id})">✕</button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            const list = document.getElementById('tasksList');
-            if (notes.length === 0) {
-                list.innerHTML = '<p style="color:var(--text-secondary); font-size:12px;">Записей нет</p>';
-            } else {
-                list.innerHTML = notes.map(n => `
-                    <div class="list-item">
-                        <div class="item-info">
-                            <div class="item-title">${escapeHtml(n.text)}</div>
-                            <div class="item-sub">
-                                <span class="badge">${n.category || 'Заметка'}</span>
-                                <span class="badge">${n.date}</span>
-                            </div>
-                        </div>
-                        <div style="display:flex; gap:5px;">
-                            <button class="del-btn" style="color:var(--accent);" onclick="editNote(${n.id})">Изменить</button>
-                            <button class="del-btn" onclick="deleteNote(${n.id})">Удалить</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function addWorkout() {
-            const ex = document.getElementById('workEx').value.trim();
-            const weight = document.getElementById('workWeight').value.trim();
-            const sets = document.getElementById('workSets').value.trim();
-            if (!ex) return;
-            workouts.unshift({ id: Date.now(), ex, weight: weight || '0', sets: sets || '-', date: getTodayDate() });
-            saveAndRender();
-            document.getElementById('workEx').value = ''; document.getElementById('workWeight').value = ''; document.getElementById('workSets').value = '';
-        }
-        function deleteWorkout(id) { workouts = workouts.filter(w => w.id !== id); saveAndRender(); }
-
-        function renderWorkouts() {
-            const container = document.getElementById('workoutsList');
-            if (workouts.length === 0) { container.innerHTML = '<p style="color:var(--text-secondary); font-size:12px;">Нет тренировок</p>'; return; }
-            container.innerHTML = workouts.map(w => `
-                <div class="list-item">
-                    <div class="item-info">
-                        <div class="item-title">${escapeHtml(w.ex)}</div>
-                        <div class="item-sub"><span class="badge">🏋️ ${w.weight} кг</span><span class="badge">🔁 ${escapeHtml(w.sets)}</span><span class="badge">${w.date}</span></div>
-                    </div>
-                    <button class="del-btn" onclick="deleteWorkout(${w.id})">Удалить</button>
-                </div>
-            `).join('');
-        }
-
-        /* --- ЛОГИКА ФИНАНСОВ --- */
-        function addFinanceTransaction(type) {
-            const acc = document.getElementById('finAccount').value;
-            const category = document.getElementById('finCategory').value;
-            const amount = parseFloat(document.getElementById('finAmount').value);
-            const comment = document.getElementById('finComment').value.trim();
-
-            if (!amount || amount <= 0) return;
-
-            // Обновляем счета
-            if (type === 'income') {
-                accounts[acc] += amount;
-            } else {
-                accounts[acc] -= amount;
-            }
-
-            finance.unshift({
-                id: Date.now(),
-                type,
-                account: acc,
-                category: type === 'income' ? 'Доход' : category,
-                amount,
-                comment: comment || 'Без комментария',
-                date: getTodayDate()
-            });
-
-            document.getElementById('finAmount').value = '';
-            document.getElementById('finComment').value = '';
-            saveAndRender();
-        }
-
-        function deleteFinanceTransaction(id) {
-            const tr = finance.find(f => f.id === id);
-            if (!tr) return;
-
-            // Откат счета
-            if (tr.type === 'income') {
-                accounts[tr.account] -= tr.amount;
-            } else {
-                accounts[tr.account] += tr.amount;
-            }
-
-            finance = finance.filter(f => f.id !== id);
-            saveAndRender();
-        }
-
-        function filterFinCategory(cat, chipEl) {
-            selectedCategoryFilter = cat;
-            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-            chipEl.classList.add('active');
-            renderFinance();
-        }
-
-        function getAccountName(accKey) {
-            if (accKey === 'cash') return '💵 Наличные';
-            if (accKey === 'salary') return '💳 Зарплата';
-            if (accKey === 'credit') return '💳 Кредитка';
-            return accKey;
-        }
-
-        function renderFinance() {
-            // Отрисовка счетов
-            document.getElementById('accCashVal').innerText = accounts.cash.toLocaleString() + ' ₼';
-            document.getElementById('accSalaryVal').innerText = accounts.salary.toLocaleString() + ' ₼';
-            
-            // Расчет кредитки и долга (Лимит 500 AZN)
-            const creditLimit = 500;
-            const creditDebt = creditLimit - accounts.credit; // Всё что ниже 500 — это долг
-            
-            document.getElementById('accCreditVal').innerText = accounts.credit.toLocaleString() + ' ₼';
-            document.getElementById('accCreditDebtVal').innerText = creditDebt > 0 ? `Долг: ${creditDebt.toLocaleString()} ₼` : 'Долга нет';
-
-            // Главная виджеты
-            document.getElementById('statCash').innerText = accounts.cash.toLocaleString() + ' ₼';
-            document.getElementById('statCreditDebt').innerText = (creditDebt > 0 ? creditDebt.toLocaleString() : '0') + ' ₼';
-
-            // Список операций
-            const container = document.getElementById('financeList');
-            let filteredList = finance;
-            if (selectedCategoryFilter !== 'all') {
-                filteredList = finance.filter(f => f.category === selectedCategoryFilter);
-            }
-
-            // Подсчет суммы по выбранной категории
-            if (selectedCategoryFilter !== 'all') {
-                const totalSpentCat = filteredList.reduce((sum, f) => f.type === 'expense' ? sum + f.amount : sum, 0);
-                document.getElementById('categoryTotalSum').innerText = `Всего потрачено: ${totalSpentCat.toLocaleString()} ₼`;
-            } else {
-                document.getElementById('categoryTotalSum').innerText = '';
-            }
-
-            if (filteredList.length === 0) { 
-                container.innerHTML = '<p style="color:var(--text-secondary); font-size:12px;">Нет записей в этой категории</p>'; 
-                return; 
-            }
-
-            container.innerHTML = filteredList.map(f => `
-                <div class="list-item">
-                    <div class="item-info">
-                        <div class="item-title">${escapeHtml(f.category)} ${f.comment ? '— ' + escapeHtml(f.comment) : ''}</div>
-                        <div class="item-sub">
-                            <span class="badge">${getAccountName(f.account)}</span>
-                            <span class="badge">${f.date}</span>
-                        </div>
-                    </div>
-                    <div style="margin-right:8px; font-weight:700; font-size:13px; color:${f.type === 'income' ? 'var(--accent-green)' : 'var(--accent-red)'};">
-                        ${f.type === 'income' ? '+' : '-'}${f.amount} ₼
-                    </div>
-                    <button class="del-btn" onclick="deleteFinanceTransaction(${f.id})">✕</button>
-                </div>
-            `).join('');
-        }
-
-        function openTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
-            document.querySelectorAll('.nav button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabName).style.display = 'block';
-            document.getElementById('btn-' + tabName).classList.add('active');
-        }
-
-        function getTodayDate() {
-            const d = new Date();
-            const months = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-            return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
-        }
-
-        function saveAndRender() {
-            localStorage.setItem('my_notes', JSON.stringify(notes));
-            localStorage.setItem('my_workouts', JSON.stringify(workouts));
-            localStorage.setItem('my_finance_transactions', JSON.stringify(finance));
-            localStorage.setItem('my_accounts', JSON.stringify(accounts));
-
-            document.getElementById('statNotesCount').innerText = notes.length;
-
-            renderNotesAndStickers();
-            renderWorkouts();
-            renderFinance();
-        }
-
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ notes, workouts, finance, accounts }));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `my_diary_backup_${getTodayDate()}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click(); downloadAnchor.remove();
-        }
-
-        function importData(e) {
-            const fileReader = new FileReader();
-            fileReader.onload = function (event) {
-                try {
-                    const data = JSON.parse(event.target.result);
-                    if (data.notes) notes = data.notes;
-                    if (data.workouts) workouts = data.workouts;
-                    if (data.finance) finance = data.finance;
-                    if (data.accounts) accounts = data.accounts;
-                    saveAndRender(); alert('Данные успешно восстановлены!');
-                } catch (err) { alert('Ошибка чтения файла бэкапа'); }
-            };
-            fileReader.readAsText(e.target.files[0]);
-        }
-
-        function clearAllData() {
-            if (confirm('Сбросить и удалить абсолютно все данные?')) {
-                localStorage.clear(); 
-                notes = []; workouts = []; finance = []; 
-                accounts = { cash: 0, salary: 0, credit: 500 };
-                saveAndRender();
-            }
-        }
-
-        function escapeHtml(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-
-        document.getElementById('currentDateStr').innerText = 'Сегодня: ' + getTodayDate();
-        saveAndRender();
-        if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
-    </script>
-</body>
-</html>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand"><div class="brand-mark"><svg viewBox="0 0 24 24"><path d="M5 5h14v14H5z" fill="none" stroke="white" stroke-width="1.8"/><path d="M8 9h8M8 13h5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="brand-title"><strong>Мой Дневник</strong><span>личная система</span></div></div>
+  <div class="nav-group"><div class="nav-label">Разделы</div>
+    <button class="nav-item active" data-page="home"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7"/><path d="M5 9v11h14V9M9 20v-7h6v7"/></svg><span>Главная</span></button>
+    <button class="nav-item" data-page="notes"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>Заметки</span></button>
+    <button class="nav-item" data-page="workouts"><svg viewBox="0 0 24 24"><path d="M6 9v6M9 7v10M15 7v10M18 9v6M4 11h16M4 13h16"/></svg><span>Тренировки</span></button>
+    <button class="nav-item" data-page="finance"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="12" cy="12" r="2.5"/><path d="M3 9h4"/></svg><span>Финансы</span></button>
+  </div>
+  <div class="nav-group"><div class="nav-label">Система</div>
+    <button class="nav-item" data-page="backup"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 20h14"/></svg><span>Резервная копия</span></button>
+  </div>
+  <div class="sidebar-footer"><div class="profile-mini"><div class="avatar">MД</div><div><strong>Личный дневник</strong><span>данные хранятся локально</span></div></div></div>
+</aside>
+<div class="mobile-overlay" id="overlay"></div>
+<main class="main">
+<header class="topbar"><div class="topbar-left"><button class="icon-btn mobile-menu" id="menuBtn"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div><div class="page-title" id="pageTitle">Главная</div><div class="page-subtitle" id="pageSubtitle">Твои записи, тренировки и деньги — в одном месте</div></div></div><div class="top-actions"><button class="icon-btn" id="searchBtn" title="Поиск"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button><button class="icon-btn" id="themeBtn" title="Тема"><svg id="themeIcon" viewBox="0 0 24 24"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"/></svg></button></div></header>
+<div class="search-panel" id="searchPanel"><div class="search-input"><input id="searchInput" placeholder="Поиск по заметкам, тренировкам и операциям…"><button class="secondary" id="closeSearch">Закрыть</button></div><div class="search-results" id="searchResults"></div></div>
+<div class="content">
+<section class="page active" id="home">
+  <div class="hero"><div class="hero-card"><div class="eyebrow">Сегодня</div><h2>Добро пожаловать 👋</h2><p id="currentDate">—</p><div class="stats"><div class="stat"><span>Заметок</span><strong id="statNotes">0</strong></div><div class="stat"><span>Наличные</span><strong id="statCash">0 ₼</strong></div><div class="stat"><span>Долг по кредитке</span><strong id="statDebt">0 ₼</strong></div></div></div><div class="quick"><div class="quick-card"><div class="quick-head"><div class="eyebrow">Активность</div><span class="pill" id="activityPill">0 записей</span></div><div class="quick-value" id="activityValue">0</div><div class="trend">Всего сохранено в дневнике</div></div><div class="quick-card"><div class="quick-head"><div class="eyebrow">Баланс</div><span class="pill">AZN</span></div><div class="quick-value" id="balanceValue">0 ₼</div><div class="trend">Наличные + зарплатная карта</div></div></div></div>
+  <div class="section-head"><h3>Последние заметки</h3><span id="notesHint">0 записей</span></div><div class="stickers" id="stickersBoard"></div>
+</section>
+<section class="page" id="notes"><div class="toolbar"><div class="toolbar-left"><div class="eyebrow">Заметки</div><span class="pill" id="notesCountPill">0</span></div><div><button class="primary" id="saveNoteBtn"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Новая заметка</span></button></div></div><div class="card" id="noteEditor"><div class="form"><div class="field"><label>Текст</label><textarea id="noteText" placeholder="Запиши мысль, рецепт, идею или важную информацию…"></textarea></div><div class="form-row two"><div class="field"><label>Категория</label><select id="noteCategory"><option>Заметка</option><option>Рецепт</option><option>Идея</option><option>Важное</option></select></div><div class="field"><label>Цвет</label><select id="noteColor"><option value="sage">Sage</option><option value="sand">Sand</option><option value="clay">Clay</option><option value="ocean">Ocean</option></select></div></div><div class="form-actions"><button class="secondary" id="cancelNote">Очистить</button><button class="primary" id="saveNote">Сохранить заметку</button></div></div></div><div class="section-head"><h3>Все записи</h3><span>Локально сохранено</span></div><div class="card"><div class="list" id="notesList"></div></div></section>
+<section class="page" id="workouts"><div class="toolbar"><div class="toolbar-left"><div class="eyebrow">Тренировки</div><span class="pill" id="workoutsCountPill">0</span></div></div><div class="card"><div class="form"><div class="form-row"><div class="field"><label>Упражнение</label><input id="workEx" placeholder="Например: жим лёжа"></div><div class="field"><label>Вес, кг</label><input id="workWeight" type="number" min="0" step="0.5" placeholder="100"></div><div class="field"><label>Подходы</label><input id="workSets" placeholder="4×8"></div></div><div class="form-actions"><button class="primary" id="addWorkout">Добавить подход</button></div></div></div><div class="section-head"><h3>История в зале</h3><span>Новые сверху</span></div><div class="card"><div class="list" id="workoutsList"></div></div></section>
+<section class="page" id="finance"><div class="accounts"><div class="account"><div class="account-head"><span>Наличные</span><div class="account-icon"><svg viewBox="0 0 24 24"><path d="M3 7h18v10H3z"/><path d="M8 12h8"/></svg></div></div><strong id="accCash">0 ₼</strong><small>доступные наличные</small></div><div class="account"><div class="account-head"><span>Зарплата</span><div class="account-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 12h10"/></svg></div></div><strong id="accSalary">0 ₼</strong><small>карта зарплаты</small></div><div class="account"><div class="account-head"><span>Кредитка</span><div class="account-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/></svg></div></div><strong id="accCredit">500 ₼</strong><small id="accCreditSub">долг: 0 ₼</small></div></div>
+<div class="card"><div class="toolbar"><div class="toolbar-left"><div class="eyebrow">Новая операция</div></div><span class="pill">контроль баланса</span></div><div class="form"><div class="form-row two"><div class="field"><label>Счёт</label><select id="finAccount"><option value="cash">Наличные</option><option value="salary">Зарплата</option><option value="credit">Кредитка</option></select></div><div class="field"><label>Категория</label><select id="finCategory"><option>Дом</option><option>Ребенок</option><option>Машина</option><option>Коммуналка</option><option>Еда</option><option>Перекусы</option><option>Ресторан</option><option>Гулять</option><option>Доход</option></select></div></div><div class="form-row two"><div class="field"><label>Сумма, ₼</label><input id="finAmount" type="number" min="0.01" step="0.01" placeholder="0"></div><div class="field"><label>Комментарий</label><input id="finComment" placeholder="За что списание или откуда доход"></div></div><div class="form-actions"><button class="success" id="addIncome"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Доход</button><button class="danger" id="addExpense"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>Расход</button></div></div></div>
+<div class="section-head"><h3>Категории расходов</h3><span id="categoryTotal"></span></div><div class="chips" id="catChips"></div><div class="section-head"><h3>История операций</h3><span>Новые сверху</span></div><div class="card"><div class="list" id="financeList"></div></div></section>
+<section class="page" id="backup"><div class="grid-2"><div class="card"><div class="eyebrow">Резервная копия</div><h3 style="margin:8px 0 5px;font-size:16px">Сохранить данные</h3><p style="margin:0;color:var(--muted);font-size:11px;line-height:1.5">Скачается JSON-файл со всеми заметками, тренировками, операциями и балансами.</p><div style="margin-top:14px"><button class="primary" id="exportBtn"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Скачать бэкап</button></div></div><div class="card"><div class="eyebrow">Восстановление</div><h3 style="margin:8px 0 5px;font-size:16px">Загрузить данные</h3><p style="margin:0 0 14px;color:var(--muted);font-size:11px">Импорт заменит текущие данные из файла JSON.</p><input id="importFile" type="file" accept=".json,application/json" style="width:100%"></div></div><div class="card" style="margin-top:14px"><div class="eyebrow">Опасная зона</div><div class="toolbar" style="margin:10px 0 0"><div><strong style="font-size:13px">Сбросить дневник</strong><div style="font-size:10px;color:var(--muted);margin-top:3px">Удаляет все локальные записи без возможности восстановления.</div></div><button class="danger" id="clearBtn">Сбросить всё</button></div></div></section>
+</div></main></div>
+<script>
+'use strict';
+const KEY={notes:'premium_notes',workouts:'premium_workouts',finance:'premium_finance',accounts:'premium_accounts',theme:'premium_theme'};
+const defaultAccounts={cash:0,salary:0,credit:500};
+let notes=load(KEY.notes,[]),workouts=load(KEY.workouts,[]),finance=load(KEY.finance,[]),accounts={...defaultAccounts,...load(KEY.accounts,{})};
+let editingNoteId=null,selectedFilter='all';
+const $=id=>document.getElementById(id);
+function load(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch{return f}}
+function persist(){localStorage.setItem(KEY.notes,JSON.stringify(notes));localStorage.setItem(KEY.workouts,JSON.stringify(workouts));localStorage.setItem(KEY.finance,JSON.stringify(finance));localStorage.setItem(KEY.accounts,JSON.stringify(accounts));renderAll()}
+function money(v){return `${Number(v||0).toLocaleString('ru-RU',{maximumFractionDigits:2})} ₼`}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function dateStr(){return new Date().toLocaleDateString('ru-RU',{day:'2-digit',month:'long',year:'numeric'})}
+function icon(name){const m={edit:'<path d="m4 16-.8 4.8L8 20l11-11-4-4L4 16Z"/><path d="m13.5 6.5 4 4"/>',trash:'<path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13"/>',note:'<path d="M5 4h14v16H5z"/><path d="M8 9h8M8 13h6"/>',work:'<path d="M6 9v6M9 7v10M15 7v10M18 9v6M4 11h16M4 13h16"/>',plus:'<path d="M12 5v14M5 12h14"/>'};return `<svg viewBox="0 0 24 24">${m[name]||m.note}</svg>`}
+function renderHome(){
+ $('currentDate').textContent=dateStr();$('statNotes').textContent=notes.length;$('statCash').textContent=money(accounts.cash);const debt=Math.max(0,500-Number(accounts.credit||0));$('statDebt').textContent=money(debt);const activity=notes.length+workouts.length+finance.length;$('activityValue').textContent=activity;$('activityPill').textContent=`${activity} ${activity===1?'запись':'записей'}`;$('balanceValue').textContent=money(Number(accounts.cash||0)+Number(accounts.salary||0));$('notesHint').textContent=`${notes.length} ${notes.length===1?'запись':'записей'}`;
+ const board=$('stickersBoard');if(!notes.length){board.innerHTML='<div class="empty" style="grid-column:1/-1">Пока нет заметок. Добавь первую — она появится здесь.</div>';return}
+ board.innerHTML=notes.slice(0,8).map(n=>`<article class="sticker ${esc(n.color||'sage')}"><div><div class="sticker-tag">${esc(n.category||'Заметка')}</div><div class="sticker-text">${esc(n.text)}</div></div><div class="sticker-foot"><span>${esc(n.date||'—')}</span><span class="sticker-actions"><button class="mini-btn" data-edit="${n.id}" title="Изменить">${icon('edit')}</button><button class="mini-btn" data-delete="${n.id}" title="Удалить">${icon('trash')}</button></span></div></article>`).join('');
+}
+function renderNotes(){
+ $('notesCountPill').textContent=notes.length;$('notesList').innerHTML=notes.length?notes.map(n=>`<div class="list-item"><div class="list-main"><div class="list-title">${esc(n.text)}</div><div class="list-sub"><span class="badge">${esc(n.category||'Заметка')}</span><span class="badge">${esc(n.date||'—')}</span></div></div><button class="secondary" data-edit="${n.id}">${icon('edit')} Изменить</button><button class="danger" data-delete="${n.id}">${icon('trash')}</button></div>`).join(''):'<div class="empty">Записей пока нет.</div>';
+}
+function renderWorkouts(){ $('workoutsCountPill').textContent=workouts.length;$('workoutsList').innerHTML=workouts.length?workouts.map(w=>`<div class="list-item"><div class="list-main"><div class="list-title">${esc(w.ex)}</div><div class="list-sub"><span class="badge">${esc(w.weight)} кг</span><span class="badge">${esc(w.sets)}</span><span class="badge">${esc(w.date)}</span></div></div><button class="danger" data-workout-delete="${w.id}">${icon('trash')}</button></div>`).join(''):'<div class="empty">Тренировок пока нет.</div>'}
+function renderFinance(){
+ $('accCash').textContent=money(accounts.cash);$('accSalary').textContent=money(accounts.salary);$('accCredit').textContent=money(accounts.credit);const debt=Math.max(0,500-Number(accounts.credit||0));$('accCreditSub').textContent=debt?`долг: ${money(debt)}`:'долга нет';
+ const cats=['all','Дом','Ребенок','Машина','Коммуналка','Еда','Перекусы','Ресторан','Гулять'];const labels={all:'Все',Дом:'Дом',Ребенок:'Ребенок',Машина:'Машина',Коммуналка:'Коммуналка',Еда:'Еда',Перекусы:'Перекусы',Ресторан:'Ресторан',Гулять:'Гулять'};$('catChips').innerHTML=cats.map(c=>`<button class="chip ${selectedFilter===c?'active':''}" data-filter="${esc(c)}">${labels[c]}</button>`).join('');
+ let list=selectedFilter==='all'?finance:finance.filter(f=>f.category===selectedFilter);const total=list.filter(f=>f.type==='expense').reduce((s,f)=>s+Number(f.amount),0);$('categoryTotal').textContent=selectedFilter==='all'?'':`Расходы: ${money(total)}`;
+ $('financeList').innerHTML=list.length?list.map(f=>`<div class="list-item"><div class="list-main"><div class="list-title">${esc(f.category)} · ${esc(f.comment||'Без комментария')}</div><div class="list-sub"><span class="badge">${esc(f.accountName||f.account)}</span><span class="badge">${esc(f.date)}</span></div></div><div class="list-value ${f.type==='income'?'in':'out'}">${f.type==='income'?'+':'−'}${money(f.amount)}</div><button class="danger" data-fin-delete="${f.id}">${icon('trash')}</button></div>`).join(''):'<div class="empty">Операций в этой категории пока нет.</div>';
+}
+function renderAll(){renderHome();renderNotes();renderWorkouts();renderFinance()}
+function resetNoteForm(){editingNoteId=null;$('noteText').value='';$('noteCategory').value='Заметка';$('noteColor').value='sage';$('saveNoteBtn').innerHTML='Сохранить заметку';$('cancelNote').textContent='Очистить';}
+function startEdit(id){const n=notes.find(x=>x.id===id);if(!n)return;editingNoteId=id;$('noteText').value=n.text;$('noteCategory').value=n.category||'Заметка';$('noteColor').value=n.color||'sage';$('saveNoteBtn').innerHTML='Сохранить изменения';$('cancelNote').textContent='Отмена';openPage('notes')}
+function saveNote(){const text=$('noteText').value.trim();if(!text){alert('Напиши текст заметки.');$('noteText').focus();return}if(editingNoteId){notes=notes.map(n=>n.id===editingNoteId?{...n,text,category:$('noteCategory').value,color:$('noteColor').value}:n)}else{notes.unshift({id:Date.now(),text,category:$('noteCategory').value,color:$('noteColor').value,date:dateStr()})}resetNoteForm();persist();openPage('notes')}
+function deleteNote(id){notes=notes.filter(n=>n.id!==id);persist()}
+function addWorkout(){const ex=$('workEx').value.trim();if(!ex){alert('Укажи упражнение.');$('workEx').focus();return}workouts.unshift({id:Date.now(),ex,weight:$('workWeight').value||'0',sets:$('workSets').value.trim()||'—',date:dateStr()});$('workEx').value='';$('workWeight').value='';$('workSets').value='';persist()}
+function deleteWorkout(id){workouts=workouts.filter(w=>w.id!==id);persist()}
+function addFinance(type){const acc=$('finAccount').value,category=type==='income'?'Доход':$('finCategory').value,amount=Number($('finAmount').value),comment=$('finComment').value.trim();if(!Number.isFinite(amount)||amount<=0){alert('Укажи корректную сумму.');$('finAmount').focus();return}
+ if(type==='expense'&&amount>Number(accounts[acc]||0)){alert(`Недостаточно средств на счёте «${acc==='cash'?'Наличные':acc==='salary'?'Зарплата':'Кредитка'}». Доступно: ${money(accounts[acc])}`);return}
+ accounts[acc]=Number(accounts[acc]||0)+(type==='income'?amount:-amount);finance.unshift({id:Date.now(),type,account:acc,accountName:acc==='cash'?'Наличные':acc==='salary'?'Зарплата':'Кредитка',category,amount,comment:comment||'Без комментария',date:dateStr()});$('finAmount').value='';$('finComment').value='';persist()}
+function deleteFinance(id){const f=finance.find(x=>x.id===id);if(!f)return;accounts[f.account]=Number(accounts[f.account]||0)+(f.type==='income'?-Number(f.amount):Number(f.amount));finance=finance.filter(x=>x.id!==id);persist()}
+function exportData(){const data={version:2,exportedAt:new Date().toISOString(),notes,workouts,finance,accounts};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`my_diary_backup_${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importData(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||typeof d!=='object')throw new Error();notes=Array.isArray(d.notes)?d.notes:[];workouts=Array.isArray(d.workouts)?d.workouts:[];finance=Array.isArray(d.finance)?d.finance:[];accounts={...defaultAccounts,...(d.accounts||{})};persist();alert('Данные успешно восстановлены.')}catch{alert('Не удалось прочитать JSON-бэкап.')}};r.readAsText(file)}
+function clearAll(){if(!confirm('Удалить все заметки, тренировки и финансы? Это действие нельзя отменить.'))return;notes=[];workouts=[];finance=[];accounts={...defaultAccounts};persist();resetNoteForm()}
+const titles={home:['Главная','Твои записи, тренировки и деньги — в одном месте'],notes:['Заметки','Идеи, рецепты и важные мысли'],workouts:['Тренировки','Подходы, веса и история прогресса'],finance:['Финансы','Баланс счетов и история операций'],backup:['Резервная копия','Сохраняй и переноси данные без лишних действий']};
+function openPage(page){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(page).classList.add('active');document.querySelectorAll('.nav-item').forEach(x=>x.classList.toggle('active',x.dataset.page===page));$('pageTitle').textContent=titles[page][0];$('pageSubtitle').textContent=titles[page][1];closeMobile();}
+function closeMobile(){$('sidebar').classList.remove('open');$('overlay').classList.remove('show')}
+function search(){const q=$('searchInput').value.toLowerCase().trim();if(!q){$('searchResults').innerHTML='';return}let h='';notes.filter(n=>`${n.text} ${n.category}`.toLowerCase().includes(q)).forEach(n=>h+=`<div class="list-item"><div class="list-main"><div class="list-title">${esc(n.text)}</div><div class="list-sub"><span class="badge">Заметка</span></div></div></div>`);workouts.filter(w=>`${w.ex} ${w.sets}`.toLowerCase().includes(q)).forEach(w=>h+=`<div class="list-item"><div class="list-main"><div class="list-title">${esc(w.ex)}</div><div class="list-sub"><span class="badge">Тренировка · ${esc(w.weight)} кг</span></div></div></div>`);finance.filter(f=>`${f.category} ${f.comment} ${f.account}`.toLowerCase().includes(q)).forEach(f=>h+=`<div class="list-item"><div class="list-main"><div class="list-title">${esc(f.category)} · ${esc(f.comment)}</div><div class="list-sub"><span class="badge">Финансы · ${f.type==='income'?'Доход':'Расход'}</span></div></div></div>`);$('searchResults').innerHTML=h||'<div class="empty">Ничего не найдено.</div>'}
+// Events
+ document.querySelectorAll('.nav-item').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.page)));
+ $('menuBtn').addEventListener('click',()=>{$('sidebar').classList.add('open');$('overlay').classList.add('show')});$('overlay').addEventListener('click',closeMobile);
+ $('themeBtn').addEventListener('click',()=>{document.body.classList.toggle('light');localStorage.setItem(KEY.theme,document.body.classList.contains('light')?'light':'dark')});
+ $('searchBtn').addEventListener('click',()=>{$('searchPanel').classList.toggle('open');if($('searchPanel').classList.contains('open'))$('searchInput').focus()});$('closeSearch').addEventListener('click',()=>$('searchPanel').classList.remove('open'));$('searchInput').addEventListener('input',search);
+ $('saveNoteBtn').addEventListener('click',()=>{resetNoteForm();$('noteText').focus()});$('saveNote').addEventListener('click',saveNote);$('cancelNote').addEventListener('click',resetNoteForm);$('addWorkout').addEventListener('click',addWorkout);$('addIncome').addEventListener('click',()=>addFinance('income'));$('addExpense').addEventListener('click',()=>addFinance('expense'));$('exportBtn').addEventListener('click',exportData);$('importFile').addEventListener('change',e=>importData(e.target.files[0]));$('clearBtn').addEventListener('click',clearAll);
+ document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit]');if(edit){startEdit(Number(edit.dataset.edit));return}const del=e.target.closest('[data-delete]');if(del){deleteNote(Number(del.dataset.delete));return}const wd=e.target.closest('[data-workout-delete]');if(wd){deleteWorkout(Number(wd.dataset.workoutDelete));return}const fd=e.target.closest('[data-fin-delete]');if(fd){deleteFinance(Number(fd.dataset.finDelete));return}const chip=e.target.closest('[data-filter]');if(chip){selectedFilter=chip.dataset.filter;renderFinance()}});
+ if(localStorage.getItem(KEY.theme)==='light')document.body.classList.add('light');renderAll();
+</script>
+</body></html>
